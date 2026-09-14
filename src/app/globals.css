@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0e0d0c;
+  --surface: #171513;
+  --surface-2: #201d1a;
+  --border: #322d28;
+  --foreground: #f3ede4;
+  --muted: #a89f93;
+  --accent: #e2a03f;
+  --accent-foreground: #1a1305;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: rgba(226, 160, 63, 0.35);
+}
+
+/* pdf.js text layer — enables selectable, invisible text over the rendered
+   canvas so highlighting lines up with what's on the page. Copied from
+   pdfjs-dist/web/pdf_viewer.css (only the .textLayer rule) since importing
+   that file from a client component breaks the server build's handling of
+   pdfjs-dist as an external package. */
+.textLayer {
+  color-scheme: only light;
+
+  position: absolute;
+  text-align: initial;
+  inset: 0;
+  overflow: clip;
+  opacity: 1;
+  line-height: 1;
+  letter-spacing: normal;
+  word-spacing: normal;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  caret-color: CanvasText;
+  z-index: 0;
+
+  &.highlighting {
+    touch-action: none;
+  }
+
+  :is(span, br) {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+  }
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+
+  > :not(.markedContent),
+  .markedContent span:not(.markedContent) {
+    z-index: 1;
+
+    --font-height: 0;
+    font-size: calc(var(--text-scale-factor) * var(--font-height));
+
+    --scale-x: 1;
+    --rotate: 0deg;
+    transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+  }
+
+  .markedContent {
+    display: contents;
+  }
+
+  span[role="img"] {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+
+  ::-moz-selection {
+    background: color-mix(in srgb, AccentColor, transparent 50%);
+    color: transparent;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, AccentColor, transparent 50%);
+    color: transparent;
+  }
+
+  .endOfContent {
+    display: block;
+    position: absolute;
+    inset: 100% 0 0;
+    z-index: 0;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  &.selecting .endOfContent {
+    top: 0;
+  }
+}
+
+.stash-card-amber {
+  border-color: color-mix(in srgb, #e2a03f 45%, transparent);
+  background: color-mix(in srgb, #e2a03f 10%, var(--surface));
+}
+.stash-card-rose {
+  border-color: color-mix(in srgb, #e2647f 45%, transparent);
+  background: color-mix(in srgb, #e2647f 10%, var(--surface));
+}
+.stash-card-emerald {
+  border-color: color-mix(in srgb, #3fbf8f 45%, transparent);
+  background: color-mix(in srgb, #3fbf8f 10%, var(--surface));
+}
+.stash-card-sky {
+  border-color: color-mix(in srgb, #4fa7e2 45%, transparent);
+  background: color-mix(in srgb, #4fa7e2 10%, var(--surface));
+}
+.stash-card-violet {
+  border-color: color-mix(in srgb, #a06fe2 45%, transparent);
+  background: color-mix(in srgb, #a06fe2 10%, var(--surface));
+}
+
+.dot-amber {
+  background: #e2a03f;
+}
+.dot-rose {
+  background: #e2647f;
+}
+.dot-emerald {
+  background: #3fbf8f;
+}
+.dot-sky {
+  background: #4fa7e2;
+}
+.dot-violet {
+  background: #a06fe2;
+}

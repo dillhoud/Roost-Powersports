@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id           String    @id @default(cuid())
+  title        String
+  author       String?
+  filename     String
+  fileSize     Int
+  pageCount    Int?
+  createdAt    DateTime  @default(now())
+  lastOpenedAt DateTime?
+  lastPage     Int       @default(1)
+  stashes      Stash[]
+}
+
+model Stash {
+  id        String          @id @default(cuid())
+  bookId    String
+  book      Book            @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  page      Int
+  excerpt   String
+  note      String?
+  color     String          @default("amber")
+  createdAt DateTime        @default(now())
+  tags      TagsOnStashes[]
+}
+
+model Tag {
+  id      String          @id @default(cuid())
+  name    String          @unique
+  stashes TagsOnStashes[]
+}
+
+model TagsOnStashes {
+  stashId String
+  tagId   String
+  stash   Stash  @relation(fields: [stashId], references: [id], onDelete: Cascade)
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([stashId, tagId])
+}
