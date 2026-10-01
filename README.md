@@ -1,95 +1,47 @@
-# Stash
+# TrailGurus
 
-A private library for your own PDF books — upload PDFs, read them in the
-browser, and save the passages worth keeping as tagged "stashes" you can
-search and browse later (think: a personal, self-hosted Deep Stash for the
-books you already own).
+A CarGurus-style marketplace for powersports — ATVs, side-by-sides, snowmobiles and motorcycles — that also covers research: owner reviews you can filter, common problems by make and model, and every current brand discount.
 
-Built for one reader, self-hosted on your own hardware. No accounts, no
-sign-up, no third-party services — everything (PDFs and the notes you save)
-lives in a single SQLite database and an uploads folder on disk.
+## What's in it
 
-## Features
+| Page | What it does |
+| --- | --- |
+| `/` | Search hero, categories, today's best deals, current brand discounts, top-rated models |
+| `/listings` | Search with filters: type, deal rating, make, model, new/used, price, year, hours/miles, distance, seller type. Every listing gets a **Great / Good / Fair / High / Overpriced** rating |
+| `/listings/[id]` | Price-vs-market analysis and meter, specs, price history, **known issues flagged for that model year**, owner rating, brand offers that may apply, similar listings |
+| `/research` | Compare models by owner rating, reliability, value, fewest serious issues, MSRP |
+| `/research/[slug]` | Full model report: sub-ratings, new/used prices, current offers, common problems, filterable reviews |
+| `/reviews` | All owner reviews. Filter by riding style (mud, dunes, trail, mountain…), rider experience, model year, minimum stars, verified owners, and "only reviews that mention problems". You can also sort by what matters most to you (e.g. best reliability first) |
+| `/issues` | Searchable common-problems database: symptoms, usual fix, typical cost, how much it's discussed, sources, recalls vs. bulletins vs. owner reports. Filter by model year |
+| `/deals` | Rebates, promo APR, and pro/industry, military, first-responder, farm & ag, loyalty and racer programs, filtered by "I am…" |
 
-- **Library** — upload PDFs, see real first-page cover thumbnails, track
-  reading progress per book.
-- **Reader** — paginated PDF viewer (zoom, page jump) with selectable text
-  rendered directly over the page.
-- **Stashing** — select any passage while reading and save it with an
-  optional note, tags, and a highlight color.
-- **Stash feed** — every saved passage in one searchable, tag-filterable
-  feed, linking back to its page in the source book.
+Filters apply instantly as you change them, the URLs can be shared, and everything still works with JavaScript turned off.
 
-Audio read-along (text-to-speech narration synced word-by-word to the page)
-is intentionally not in this version — the plan is to layer it on top of the
-stash/highlight model once the core library is solid.
-
-## Tech stack
-
-- [Next.js](https://nextjs.org) (App Router) + TypeScript + Tailwind CSS
-- [Prisma](https://www.prisma.io) + SQLite for storage
-- [pdf.js](https://mozilla.github.io/pdf.js/) for in-browser PDF rendering
-  and the selectable text layer
-
-## Running locally
+## Run it
 
 ```bash
-npm install            # also runs prisma generate + copies the pdf.js worker
-npx prisma migrate deploy
-npm run dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open <http://localhost:3000>.
+Stack: Next.js 16 (App Router, server components), React 19, Tailwind CSS 4, TypeScript. No database yet.
 
-By default `DATABASE_URL` in `.env` points at `./data/app.db`. Prisma's CLI
-resolves relative SQLite paths relative to `prisma/schema.prisma`, while the
-Next.js server resolves them relative to the process's working directory —
-these disagree for a relative path, so **use an absolute path** for
-`DATABASE_URL` (see `.env.example`) to keep the CLI and the running app
-pointed at the same file.
+## Data — important
 
-## Self-hosting with Docker (recommended)
+This is a **working prototype on sample data**:
 
-```bash
-docker compose up -d --build
-```
+- `src/data/catalog.ts` — 30 real models with approximate MSRPs and specs.
+- `src/data/issues.ts` — common problems written as recurring owner-discussion themes. Mention counts are illustrative, and there are no thread links.
+- `src/data/promos.ts` — offers are **illustrative**. "Verify" links go to each brand's site.
+- Listings (`src/lib/listings.ts`) and reviews (`src/lib/reviews.ts`) are **generated** with a seeded random generator, so they stay the same between runs.
 
-This builds the app, runs pending Prisma migrations on container start, and
-serves it on <http://localhost:3000>. Uploaded PDFs and the SQLite database
-are stored in a named volume (`stash-data`, mounted at `/app/data`) so they
-survive rebuilds and restarts.
+The market-value model (`estimateMarketValue`) uses MSRP, a depreciation rate for each model, age, and hours/miles compared with typical use. Deal ratings compare the asking price to that estimate.
 
-To update after pulling new code:
+## Going to production — next steps
 
-```bash
-docker compose up -d --build
-```
-
-Migrations run automatically on start, so there's nothing else to do.
-
-### Without Docker
-
-```bash
-npm ci
-DATABASE_URL="file:/absolute/path/to/data/app.db" npx prisma migrate deploy
-DATABASE_URL="file:/absolute/path/to/data/app.db" npm run build
-DATABASE_URL="file:/absolute/path/to/data/app.db" npm run start -- -p 3000
-```
-
-Put the app behind a reverse proxy (Caddy, nginx, Tailscale, etc.) if you
-want it reachable outside your own machine/network — there's no built-in
-authentication, since this is meant for a single trusted user.
-
-## Data & backups
-
-Everything that matters lives under `data/` (or the `stash-data` Docker
-volume): `data/app.db` (SQLite database) and `data/uploads/` (the PDF
-files). Back up that one directory and you have your whole library.
-
-## Project layout
-
-- `src/app` — routes and API handlers (`/api/books`, `/api/stashes`, `/api/tags`)
-- `src/components` — the PDF viewer, upload UI, stash cards/dialogs
-- `src/lib` — Prisma client, storage helpers, server-side PDF metadata
-  extraction, and the client-side lazy pdf.js loader
-- `prisma/schema.prisma` — data model (`Book`, `Stash`, `Tag`)
+1. **Real listings:** dealer inventory feeds (DMS exports or partners such as Dealer Spike/ARI), plus private-seller posting with accounts.
+2. **Market value:** train it on real sold and listed prices (and NADA/JD Power powersports values if licensed) instead of the formula.
+3. **Common issues:** collect Reddit posts through the official Reddit API (respect its terms and rate limits) and forums where permitted. Group them into themes with an LLM, link to the original sources, and have a person review them. Pull recalls from NHTSA (motorcycles) and CPSC (off-road vehicles).
+4. **Reviews:** user accounts, VIN or receipt check for the "verified owner" badge, and moderation.
+5. **Deals:** track each brand's offers page, using partnerships or scheduled scrapes with human review. Store the date each offer was last checked and show it.
+6. Add a database (Postgres + Prisma), saved searches and price-drop alerts, and side-by-side model comparison.

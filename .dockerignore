@@ -1,7 +1,0 @@
-node_modules
-.next
-data
-*.db
-*.db-journal
-.env
-.git
