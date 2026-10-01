@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CATALOG, CATEGORIES, MAKES, getModel, type Category } from "@/data/catalog";
 import { ISSUES } from "@/data/issues";
@@ -27,7 +28,7 @@ export default function Home() {
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-b border-carbon-800">
         <Stripes />
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 pb-16 pt-14 md:pt-20 lg:grid-cols-[1.35fr_1fr] lg:items-end">
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 pb-16 pt-14 md:pt-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div className="min-w-0">
             <div className="eyebrow text-brand-400">ATV · Side-by-side · Snow · Moto</div>
             <h1 className="display mt-5 text-[64px] sm:text-[88px] lg:text-[112px]">
@@ -68,7 +69,10 @@ export default function Home() {
             </form>
           </div>
 
-          <FeaturedDeal l={featured} />
+          <div className="min-w-0">
+            <HeroMachine />
+            <FeaturedDeal l={featured} />
+          </div>
         </div>
       </section>
 
@@ -240,35 +244,46 @@ function dealLabel(l: Listing) {
   return DEAL_RATINGS.find((d) => d.id === l.deal)!.label;
 }
 
+function HeroMachine() {
+  return (
+    <div className="relative -mx-4 mb-2 sm:mx-0">
+      {/* studio spotlight + red rim glow so a black machine reads on a black page */}
+      <div aria-hidden className="absolute inset-x-[10%] top-0 bottom-[35%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.07),transparent)] blur-2xl" />
+      <div aria-hidden className="absolute inset-x-[20%] top-[10%] bottom-[30%] rounded-full bg-[radial-gradient(closest-side,rgba(225,18,31,0.3),transparent)] blur-3xl" />
+      <div aria-hidden className="absolute inset-x-[12%] bottom-[4%] h-6 rounded-[100%] bg-black/70 blur-md" />
+      <Image
+        src="/img/hero-sled.webp"
+        alt="Black mountain snowmobile with orange suspension"
+        width={1400}
+        height={796}
+        priority
+        sizes="(min-width: 1024px) 560px, 100vw"
+        className="relative w-full drop-shadow-[0_20px_30px_rgba(0,0,0,0.6)]"
+      />
+    </div>
+  );
+}
+
 function FeaturedDeal({ l }: { l: Listing }) {
   const pct = Math.round((l.savings / l.marketValue) * 100);
   return (
-    <Link href={`/listings/${l.id}`} className="group block rounded-sm border border-carbon-700 bg-carbon-900/80 p-6 backdrop-blur transition hover:border-carbon-600">
-      <div className="flex items-center justify-between">
-        <span className="eyebrow text-zinc-500">Best deal today</span>
-        <span className="rounded-sm bg-emerald-500/15 px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-400">{dealLabel(l)}</span>
-      </div>
-      <div className="font-display mt-6 text-4xl font-bold uppercase italic leading-none text-white">
-        {l.year} {l.model.make}
-        <br />
-        {l.model.model}
-      </div>
-      <div className="mt-2 text-sm text-zinc-500">
-        {num(l.usage)} {l.usageUnit} · {l.city.name}, {l.city.state}
-      </div>
-      <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-sm bg-carbon-700">
-        <div className="bg-carbon-900 p-4">
-          <div className="eyebrow text-zinc-500">Asking</div>
-          <div className="font-display mt-1 text-3xl font-bold tabular-nums text-white">{usd(l.price)}</div>
+    <Link href={`/listings/${l.id}`} className="group relative grid grid-cols-[1fr_auto] items-center gap-4 rounded-sm border border-carbon-700 bg-carbon-900/90 p-5 backdrop-blur transition hover:border-carbon-600">
+      <div className="min-w-0">
+        <div className="flex items-center gap-3 whitespace-nowrap">
+          <span className="eyebrow text-zinc-500">Best deal today</span>
+          <span className="hidden text-[11px] font-bold uppercase tracking-wider text-emerald-400 sm:inline">{dealLabel(l)}</span>
         </div>
-        <div className="bg-carbon-900 p-4">
-          <div className="eyebrow text-zinc-500">Market value</div>
-          <div className="font-display mt-1 text-3xl font-bold tabular-nums text-zinc-500 line-through decoration-1">{usd(l.marketValue)}</div>
+        <div className="font-display mt-2 text-xl font-bold sm:truncate sm:text-2xl uppercase italic leading-none text-white">
+          {l.year} {l.model.make} {l.model.model}
+        </div>
+        <div className="mt-1.5 text-xs text-zinc-500">
+          {num(l.usage)} {l.usageUnit} · {l.city.name}, {l.city.state} ·{" "}
+          <span className="whitespace-nowrap font-semibold text-emerald-400">{pct}% under market</span>
         </div>
       </div>
-      <div className="mt-4 flex items-center justify-between text-sm">
-        <span className="font-semibold text-emerald-400">{usd(l.savings)} under · {pct}% below market</span>
-        <span className="font-bold uppercase tracking-wider text-zinc-400 transition group-hover:translate-x-1 group-hover:text-white">View →</span>
+      <div className="text-right">
+        <div className="font-display text-3xl font-bold tabular-nums text-white">{usd(l.price)}</div>
+        <div className="text-xs tabular-nums text-zinc-500 line-through">{usd(l.marketValue)}</div>
       </div>
     </Link>
   );
@@ -301,7 +316,7 @@ function Stripes() {
     <div aria-hidden className="pointer-events-none absolute inset-0">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(225,18,31,0.12),transparent_55%)]" />
       <svg className="absolute -right-24 top-0 hidden h-full lg:block" viewBox="0 0 400 600" preserveAspectRatio="xMaxYMid slice">
-        <path d="M180 0 H260 L80 600 H0 Z" fill="#e1121f" opacity="0.9" />
+        <path d="M180 0 H230 L50 600 H0 Z" fill="#e1121f" opacity="0.55" />
         <path d="M290 0 H330 L150 600 H110 Z" fill="#ffffff" opacity="0.06" />
       </svg>
     </div>
