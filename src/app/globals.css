@@ -1,13 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #fff7ed;
-  --color-brand-100: #ffedd5;
-  --color-brand-500: #f97316;
-  --color-brand-600: #ea580c;
-  --color-brand-700: #c2410c;
+  /* Race red */
+  --color-brand-50: #fef2f2;
+  --color-brand-100: #fee2e2;
+  --color-brand-400: #ff4d55;
+  --color-brand-500: #e1121f;
+  --color-brand-600: #c40d19;
+  --color-brand-700: #9f0b15;
+  /* Carbon neutrals for dark surfaces */
+  --color-carbon-950: #09090a;
+  --color-carbon-900: #101012;
+  --color-carbon-850: #151518;
+  --color-carbon-800: #1c1c20;
+  --color-carbon-700: #2a2a2f;
+  --color-carbon-600: #3a3a40;
   --color-ink: #0f172a;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-barlow), var(--font-inter), ui-sans-serif, sans-serif;
 }
 
 body {
@@ -35,4 +45,11 @@ body {
 }
 @utility chip {
   @apply inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-xs font-medium text-slate-600;
+}
+
+@utility display {
+  @apply font-display font-extrabold uppercase italic leading-[0.9] tracking-tight;
+}
+@utility eyebrow {
+  @apply text-[11px] font-semibold uppercase tracking-[0.18em];
 }
