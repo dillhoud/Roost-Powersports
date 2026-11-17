@@ -3,7 +3,7 @@ import { Wordmark } from "./Header";
 
 const COLS = [
   { title: "Shop", links: [["ATVs", "/listings?category=atv"], ["Side-by-sides", "/listings?category=sxs"], ["Snowmobiles", "/listings?category=snowmobile"], ["Motorcycles", "/listings?category=motorcycle"]] },
-  { title: "Research", links: [["Compare models", "/research"], ["Owner reviews", "/reviews"], ["Known issues", "/issues"]] },
+  { title: "Research", links: [["Compare models", "/research"], ["Owner reviews", "/reviews"], ["Known issues", "/issues"], ["What's my machine worth?", "/value"]] },
   { title: "Save", links: [["All offers", "/deals"], ["Military & first responder", "/deals?type=military&type=first-responder"], ["Pro & industry", "/deals?type=pro"], ["Farm & ag", "/deals?type=ag"]] },
 ];
 

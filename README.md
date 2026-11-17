@@ -7,8 +7,9 @@ A CarGurus-style marketplace for powersports — ATVs, side-by-sides, snowmobile
 | Page | What it does |
 | --- | --- |
 | `/` | Search hero, categories, today's best deals, current brand discounts, top-rated models |
-| `/listings` | Search with filters: type, deal rating, make, model, new/used, price, year, hours/miles, distance, seller type. Every listing gets a **Great / Good / Fair / High / Overpriced** rating |
-| `/listings/[id]` | Price-vs-market analysis and meter, specs, price history, **known issues flagged for that model year**, owner rating, brand offers that may apply, similar listings |
+| `/listings` | Search with filters: type, deal rating, make, model, new/used, price, year, hours/miles, distance, seller type, **time on market** and **price drops only**. Sort by biggest price drop or longest listed. Every listing gets a **Great / Good / Fair / High / Overpriced** rating, an estimated monthly payment, and "Just listed" / "make an offer" badges |
+| `/listings/[id]` | Price-vs-market analysis and meter, specs, **time on market compared with similar listings** and price history, **payment calculator** (down payment, term, credit, tax, fees, and the brand's promo APR on new dealer units), **known issues flagged for that model year**, owner rating, brand offers that may apply, similar listings |
+| `/value` | **What's my machine worth?** Trade-in, private-party and dealer retail estimates for any model, year and hours/miles; how use changes the value; expected value a year out; known issues buyers will ask about; similar listings; and an optional "is this price fair?" check |
 | `/research` | Compare models by owner rating, reliability, value, fewest serious issues, MSRP |
 | `/research/[slug]` | Full model report: sub-ratings, new/used prices, current offers, common problems, filterable reviews |
 | `/reviews` | All owner reviews. Filter by riding style (mud, dunes, trail, mountain…), rider experience, model year, minimum stars, verified owners, and "only reviews that mention problems". You can also sort by what matters most to you (e.g. best reliability first) |

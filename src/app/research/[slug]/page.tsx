@@ -86,6 +86,7 @@ export default async function ModelPage({ params, searchParams }: Props) {
             <div className="flex justify-between"><dt className="text-zinc-500">Good or great deals now</dt><dd className="font-semibold">{market.greatDeals}</dd></div>
             <div className="flex justify-between"><dt className="text-zinc-500">Engine</dt><dd className="font-semibold">{m.engine}{m.hp ? ` · ${m.hp} hp` : ""}</dd></div>
           </dl>
+          <Link href={`/value?model=${m.slug}`} className="mt-3 inline-block text-sm font-semibold text-brand-400 hover:underline">What&apos;s yours worth? →</Link>
         </div>
         <div className="card p-5">
           <h2 className="font-bold">Current {m.make} offers</h2>

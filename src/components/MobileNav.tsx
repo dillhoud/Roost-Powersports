@@ -9,6 +9,7 @@ const NAV = [
   { href: "/reviews", label: "Reviews" },
   { href: "/issues", label: "Known Issues" },
   { href: "/deals", label: "Deals" },
+  { href: "/value", label: "Value" },
 ];
 
 export function MobileNav() {

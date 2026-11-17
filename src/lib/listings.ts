@@ -85,7 +85,7 @@ export function usageUnit(c: Category): "hrs" | "mi" {
   return c === "atv" || c === "sxs" ? "hrs" : "mi";
 }
 
-function expectedUsagePerYear(c: Category) {
+export function expectedUsagePerYear(c: Category) {
   return { atv: 70, sxs: 90, snowmobile: 1200, motorcycle: 3500 }[c];
 }
 
@@ -192,6 +192,12 @@ export interface ListingFilters {
   near?: string;
   radius?: number;
   seller?: string;
+  /** Only listings that have dropped their price. */
+  drop?: boolean;
+  /** Listed at least this many days (older listings = more room to negotiate). */
+  minDays?: number;
+  /** Listed at most this many days. */
+  maxDays?: number;
   sort?: string;
 }
 
@@ -215,6 +221,9 @@ export function filterListings(f: ListingFilters) {
       if (f.maxYear && l.year > f.maxYear) return false;
       if (f.maxUsage && l.usage > f.maxUsage) return false;
       if (f.seller && l.sellerType !== f.seller) return false;
+      if (f.drop && l.priceDrop <= 0) return false;
+      if (f.minDays && l.daysOnMarket < f.minDays) return false;
+      if (f.maxDays && l.daysOnMarket > f.maxDays) return false;
       if (origin && f.radius && (l.distance ?? 0) > f.radius) return false;
       return true;
     });
@@ -225,6 +234,8 @@ export function filterListings(f: ListingFilters) {
     "year-desc": (a, b) => b.year - a.year,
     "usage-asc": (a, b) => a.usage - b.usage,
     newest: (a, b) => a.daysOnMarket - b.daysOnMarket,
+    "dom-desc": (a, b) => b.daysOnMarket - a.daysOnMarket,
+    "drop-desc": (a, b) => b.priceDrop - a.priceDrop || b.daysOnMarket - a.daysOnMarket,
     closest: (a, b) => (a.distance ?? 0) - (b.distance ?? 0),
   };
   rows = rows.sort(sorters[f.sort ?? "best"] ?? sorters.best);
@@ -244,6 +255,30 @@ export function marketStats(slug: string) {
     avg,
     greatDeals: ls.filter((l) => l.deal === "great" || l.deal === "good").length,
   };
+}
+
+/** Days since the most recent price drop, if there was one. */
+export function lastDropDaysAgo(l: Listing) {
+  return l.history.length > 1 ? l.history[l.history.length - 1].daysAgo : undefined;
+}
+
+export const JUST_LISTED_DAYS = 3;
+export const STALE_DAYS = 60;
+
+export type MarketTimeLevel = "fresh" | "typical" | "long";
+
+/**
+ * How long this listing has been up compared with others of the same type,
+ * and what that means for a buyer.
+ */
+export function timeOnMarket(l: Listing) {
+  const peers = allListings().filter((x) => x.model.category === l.model.category);
+  const days = peers.map((x) => x.daysOnMarket).sort((a, b) => a - b);
+  const median = days[Math.floor(days.length / 2)];
+  const longerThanPct = Math.round((peers.filter((x) => x.daysOnMarket < l.daysOnMarket).length / peers.length) * 100);
+  const level: MarketTimeLevel =
+    l.daysOnMarket <= 7 ? "fresh" : l.daysOnMarket >= STALE_DAYS || longerThanPct >= 75 ? "long" : "typical";
+  return { days: l.daysOnMarket, median, longerThanPct, level };
 }
 
 export { getModel };

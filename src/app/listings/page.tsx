@@ -21,6 +21,8 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
   const deals = all(sp.deal).filter(Boolean);
   const near = first(sp.near);
   const page = Math.max(1, n("page") ?? 1);
+  const listed = first(sp.listed);
+  const drop = first(sp.drop) === "1";
 
   const rows = filterListings({
     q: first(sp.q),
@@ -37,6 +39,9 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
     near,
     radius: n("radius"),
     seller: first(sp.seller),
+    drop,
+    maxDays: listed === "new" ? 7 : undefined,
+    minDays: listed === "30" || listed === "60" ? Number(listed) : undefined,
     sort: first(sp.sort),
   });
   const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
@@ -156,6 +161,20 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
               <Radio name="seller" value="private" label="Private" checked={first(sp.seller) === "private"} />
             </div>
           </div>
+          <div>
+            <span className="label">Time on market</span>
+            <div className="grid grid-cols-4 gap-1.5">
+              <Radio name="listed" value="" label="Any" checked={!listed} />
+              <Radio name="listed" value="new" label="≤ 7d" checked={listed === "new"} />
+              <Radio name="listed" value="30" label="30d+" checked={listed === "30"} />
+              <Radio name="listed" value="60" label="60d+" checked={listed === "60"} />
+            </div>
+            <p className="mt-1.5 text-xs text-zinc-600">Machines listed longer often have more room to negotiate.</p>
+          </div>
+          <label className="flex cursor-pointer items-center gap-2 text-sm">
+            <input type="checkbox" name="drop" value="1" defaultChecked={drop} className="accent-brand-500" />
+            Price drops only
+          </label>
           <noscript><button className="btn-primary w-full">Apply filters</button></noscript>
         </aside>
         </CollapsibleFilters>
@@ -176,6 +195,8 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
                 <option value="year-desc">Newest year</option>
                 <option value="usage-asc">Lowest hours / miles</option>
                 <option value="newest">Newest listings</option>
+                <option value="drop-desc">Biggest price drop</option>
+                <option value="dom-desc">Longest on market</option>
                 {near && <option value="closest">Closest</option>}
               </select>
             </label>

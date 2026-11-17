@@ -24,7 +24,7 @@ const KIND: Record<CommonIssue["kind"], string> = {
   "owner-reported": "Owner-reported",
 };
 
-function yearInRange(years: string, y: number) {
+export function yearInRange(years: string, y: number) {
   if (years === "All") return true;
   const m = years.match(/(\d{4})(?:–(\d{4}))?/);
   if (!m) return false;
