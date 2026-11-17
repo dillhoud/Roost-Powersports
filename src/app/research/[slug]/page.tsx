@@ -6,7 +6,7 @@ import { promoTypeLabel } from "@/data/promos";
 import { getIssues, getPromos } from "@/lib/content";
 import { marketStats } from "@/lib/listings";
 import { filterReviews, scoreFor, SUB_LABELS, SUB_RATINGS } from "@/lib/reviews";
-import { first, usd, withParams } from "@/lib/format";
+import { first, cad, withParams } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
 import { IssueCard } from "@/components/IssueCard";
 import { ReviewCard } from "@/components/ReviewCard";
@@ -80,9 +80,9 @@ export default async function ModelPage({ params, searchParams }: Props) {
         <div className="card p-5">
           <h2 className="font-bold">Prices</h2>
           <dl className="mt-3 space-y-2 text-sm">
-            <div className="flex justify-between"><dt className="text-zinc-500">New (base MSRP)</dt><dd className="font-semibold">{usd(m.msrp)}</dd></div>
-            <div className="flex justify-between"><dt className="text-zinc-500">Used average asking</dt><dd className="font-semibold">{market.usedCount ? usd(market.avg) : "—"}</dd></div>
-            <div className="flex justify-between"><dt className="text-zinc-500">Used price range</dt><dd className="font-semibold">{market.usedCount ? `${usd(market.low)} – ${usd(market.high)}` : "—"}</dd></div>
+            <div className="flex justify-between"><dt className="text-zinc-500">New (base MSRP)</dt><dd className="font-semibold">{cad(m.msrp)}</dd></div>
+            <div className="flex justify-between"><dt className="text-zinc-500">Used average asking</dt><dd className="font-semibold">{market.usedCount ? cad(market.avg) : "—"}</dd></div>
+            <div className="flex justify-between"><dt className="text-zinc-500">Used price range</dt><dd className="font-semibold">{market.usedCount ? `${cad(market.low)} – ${cad(market.high)}` : "—"}</dd></div>
             <div className="flex justify-between"><dt className="text-zinc-500">Good or great deals now</dt><dd className="font-semibold">{market.greatDeals}</dd></div>
             <div className="flex justify-between"><dt className="text-zinc-500">Engine</dt><dd className="font-semibold">{m.engine}{m.hp ? ` · ${m.hp} hp` : ""}</dd></div>
           </dl>

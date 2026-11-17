@@ -54,3 +54,27 @@ export function bestPromoRate(promos: Promo[], make: string, category: Category)
     .filter((r): r is PromoRate => r !== null)
     .sort((a, b) => a.apr - b.apr)[0];
 }
+
+/**
+ * Combined sales tax (GST + PST, or HST) by province or territory, in percent.
+ * Rates change. Check the Canada Revenue Agency and provincial sites before relying on them.
+ */
+export const SALES_TAX: Record<string, { pct: number; label: string }> = {
+  AB: { pct: 5, label: "GST" },
+  BC: { pct: 12, label: "GST + PST" },
+  SK: { pct: 11, label: "GST + PST" },
+  MB: { pct: 12, label: "GST + RST" },
+  ON: { pct: 13, label: "HST" },
+  QC: { pct: 14.975, label: "GST + QST" },
+  NB: { pct: 15, label: "HST" },
+  NS: { pct: 14, label: "HST" },
+  PE: { pct: 15, label: "HST" },
+  NL: { pct: 15, label: "HST" },
+  YT: { pct: 5, label: "GST" },
+  NT: { pct: 5, label: "GST" },
+  NU: { pct: 5, label: "GST" },
+};
+
+export function salesTaxFor(province: string) {
+  return SALES_TAX[province] ?? { pct: 13, label: "Sales tax" };
+}

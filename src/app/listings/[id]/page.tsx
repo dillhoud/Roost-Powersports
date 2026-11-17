@@ -8,7 +8,7 @@ import { bestPromoRate } from "@/lib/finance";
 import { CATEGORIES } from "@/data/catalog";
 import { PaymentCalculator } from "@/components/PaymentCalculator";
 import { scoreFor } from "@/lib/reviews";
-import { num, usd } from "@/lib/format";
+import { num, cad } from "@/lib/format";
 import { DealBadge, DealMeter } from "@/components/DealBadge";
 import { VehicleArt } from "@/components/VehicleArt";
 import { Stars } from "@/components/Stars";
@@ -19,7 +19,7 @@ type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const l = getListing((await params).id);
-  return { title: l ? `${l.year} ${l.model.make} ${l.model.model} — ${usd(l.price)}` : "Listing" };
+  return { title: l ? `${l.year} ${l.model.make} ${l.model.model} — ${cad(l.price)}` : "Listing" };
 }
 
 export default async function ListingPage({ params }: Props) {
@@ -59,11 +59,11 @@ export default async function ListingPage({ params }: Props) {
             <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-3">
               {[
                 ["Condition", l.condition === "new" ? "New" : "Used"],
-                [l.usageUnit === "hrs" ? "Hours" : "Miles", num(l.usage)],
+                [l.usageUnit === "hrs" ? "Hours" : "Kilometres", num(l.usage)],
                 ["Engine", m.engine],
                 ["Horsepower", m.hp ? `${m.hp} hp` : "—"],
                 ["Seats", m.seats ?? (m.category === "motorcycle" ? 2 : 1)],
-                ["Color", l.color],
+                ["Colour", l.color],
                 ["Title", l.titleStatus],
                 ["Owners", l.oneOwner ? "1 owner" : "2+ owners"],
                 ["Segment", m.segment],
@@ -98,17 +98,17 @@ export default async function ListingPage({ params }: Props) {
         <aside className="space-y-4 lg:sticky lg:top-20 lg:h-fit">
           <div className="card p-6">
             <h1 className="text-xl font-extrabold leading-tight">{l.year} {m.make} {m.model}</h1>
-            <p className="text-sm text-zinc-500">{l.city.name}, {l.city.state} · listed {l.daysOnMarket} days ago</p>
-            <div className="mt-4 text-3xl font-extrabold">{usd(l.price)}</div>
-            {l.priceDrop > 0 && <div className="text-sm font-semibold text-emerald-400">↓ Dropped {usd(l.priceDrop)}</div>}
+            <p className="text-sm text-zinc-500">{l.city.name}, {l.city.province} · listed {l.daysOnMarket} days ago</p>
+            <div className="mt-4 text-3xl font-extrabold">{cad(l.price)}</div>
+            {l.priceDrop > 0 && <div className="text-sm font-semibold text-emerald-400">↓ Dropped {cad(l.priceDrop)}</div>}
             <div className="mt-4"><DealBadge deal={l.deal} size="lg" /></div>
             <p className="mt-3 text-sm text-zinc-400">
               {pct === 0 ? (
                 <>This price is <b>right at</b> our estimated market value of </>
               ) : (
-                <>This price is <b>{usd(Math.abs(l.savings))} ({pct}%) {l.savings >= 0 ? "below" : "above"}</b> our estimated market value of{" "}</>
+                <>This price is <b>{cad(Math.abs(l.savings))} ({pct}%) {l.savings >= 0 ? "below" : "above"}</b> our estimated market value of{" "}</>
               )}
-              <b>{usd(l.marketValue)}</b> for a {l.year} with {num(l.usage)} {l.usageUnit}.
+              <b>{cad(l.marketValue)}</b> for a {l.year} with {num(l.usage)} {l.usageUnit}.
             </p>
             <div className="mt-4"><DealMeter price={l.price} market={l.marketValue} /></div>
             <div className="mt-5 grid gap-2">
@@ -117,7 +117,7 @@ export default async function ListingPage({ params }: Props) {
             </div>
             <div className="mt-4 border-t border-carbon-800 pt-4 text-sm">
               <div className="font-semibold">{l.seller}</div>
-              <div className="text-zinc-500">{l.sellerType === "dealer" ? "Dealer" : "Private party"} · {l.city.name}, {l.city.state}</div>
+              <div className="text-zinc-500">{l.sellerType === "dealer" ? "Dealer" : "Private party"} · {l.city.name}, {l.city.province}</div>
             </div>
           </div>
 
@@ -150,18 +150,18 @@ export default async function ListingPage({ params }: Props) {
                   {l.history.map((h, i) => (
                     <li key={h.daysAgo} className="flex justify-between">
                       <span className="text-zinc-500">{i === 0 ? `Listed ${h.daysAgo} days ago` : `Dropped ${h.daysAgo} days ago`}</span>
-                      <span className="font-semibold">{usd(h.price)}</span>
+                      <span className="font-semibold">{cad(h.price)}</span>
                     </li>
                   ))}
                 </ul>
                 <p className="mt-2 font-semibold text-emerald-400">
-                  {usd(original - l.price)} ({Math.round(((original - l.price) / original) * 100)}%) less than first listed
+                  {cad(original - l.price)} ({Math.round(((original - l.price) / original) * 100)}%) less than first listed
                 </p>
               </div>
             )}
           </div>
 
-          <PaymentCalculator price={l.price} condition={l.condition} sellerType={l.sellerType} promo={promoRate} />
+          <PaymentCalculator price={l.price} condition={l.condition} sellerType={l.sellerType} province={l.city.province} promo={promoRate} />
 
           <Link
             href={`/value?model=${m.slug}&year=${l.year}&usage=${l.usage}`}

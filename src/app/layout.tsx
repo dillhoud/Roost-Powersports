@@ -15,12 +15,12 @@ const barlow = Barlow_Condensed({
 export const metadata: Metadata = {
   title: { default: "Roost — Powersports deals, reviews & known issues", template: "%s · Roost" },
   description:
-    "Shop ATVs, side-by-sides, snowmobiles and motorcycles with deal ratings, owner reviews, common problems by model, and current brand discounts in one place.",
+    "Shop ATVs, side-by-sides, snowmobiles and motorcycles across Canada with deal ratings, owner reviews, common problems by model, and current brand discounts in one place.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${barlow.variable}`}>
+    <html lang="en-CA" className={`${inter.variable} ${barlow.variable}`}>
       <body className="flex min-h-screen flex-col font-sans antialiased">
         <Header />
         <main className="flex-1">{children}</main>

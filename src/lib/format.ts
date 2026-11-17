@@ -1,14 +1,15 @@
-export const usd = (n: number) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+/** Canadian dollars, e.g. "$12,499". All prices on Roost are CAD. */
+export const cad = (n: number) =>
+  n.toLocaleString("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 });
 
-export const num = (n: number) => n.toLocaleString("en-US");
+export const num = (n: number) => n.toLocaleString("en-CA");
 
 export function daysUntil(iso: string, now = new Date()) {
   return Math.ceil((new Date(iso + "T23:59:59").getTime() - now.getTime()) / 86_400_000);
 }
 
 export function shortDate(iso: string) {
-  return new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return new Date(iso + "T12:00:00").toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" });
 }
 
 type Params = Record<string, string | string[] | undefined>;

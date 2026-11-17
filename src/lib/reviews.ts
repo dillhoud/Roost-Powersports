@@ -25,7 +25,7 @@ export interface Review {
   modelYear: number;
   ownedMonths: number;
   usage: number;
-  usageUnit: "hrs" | "mi";
+  usageUnit: "hrs" | "km";
   useCase: UseCase;
   experience: Experience;
   verified: boolean;
@@ -41,7 +41,7 @@ export interface Review {
 }
 
 const FIRST = ["Jake", "Tyler", "Brandi", "Cody", "Marcus", "Jen", "Dustin", "Kayla", "Travis", "Hank", "Lena", "Brett", "Sam", "Rosa", "Wade", "Tori", "Dale", "Erin", "Colt", "Nate"];
-const STATES = ["ID", "UT", "CO", "MN", "WI", "MI", "TX", "AZ", "MT", "WA", "TN", "PA", "ME", "OR", "NC", "OH"];
+const PROVINCES = ["BC", "AB", "SK", "MB", "ON", "QC", "NB", "NS", "PE", "NL", "YT"];
 
 /** Each model's overall "quality" lean, derived from its issue severity. */
 function baseScore(m: VehicleModel) {
@@ -68,7 +68,7 @@ function buildReview(m: VehicleModel, i: number, rand: () => number): Review {
   const year = Math.round(between(rand, Math.max(m.years[0], CURRENT_YEAR - 8), CURRENT_YEAR));
   const ownedMonths = Math.max(1, Math.round(between(rand, 1, (CURRENT_YEAR - year + 1) * 12)));
   const unit = usageUnit(m.category);
-  const usage = Math.round(((unit === "hrs" ? 7 : 300) * ownedMonths * between(rand, 0.4, 1.8)) / (unit === "hrs" ? 1 : 100)) * (unit === "hrs" ? 1 : 100);
+  const usage = Math.round(((unit === "hrs" ? 7 : 480) * ownedMonths * between(rand, 0.4, 1.8)) / (unit === "hrs" ? 1 : 100)) * (unit === "hrs" ? 1 : 100);
   const useCase = pick(rand, m.useCases);
   const pro = pick(rand, m.pros);
   const con = pick(rand, m.cons);
@@ -100,7 +100,7 @@ function buildReview(m: VehicleModel, i: number, rand: () => number): Review {
     modelSlug: m.slug,
     model: m,
     author: `${pick(rand, FIRST)} ${String.fromCharCode(65 + Math.floor(rand() * 26))}.`,
-    location: pick(rand, STATES),
+    location: pick(rand, PROVINCES),
     modelYear: year,
     ownedMonths,
     usage,

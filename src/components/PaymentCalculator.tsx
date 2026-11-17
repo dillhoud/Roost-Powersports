@@ -1,26 +1,29 @@
 "use client";
 
 import { useId, useState } from "react";
-import { CREDIT_TIERS, DEFAULT_DOWN_PCT, DEFAULT_TERM, TERMS, monthlyPayment, type PromoRate } from "@/lib/finance";
-import { usd } from "@/lib/format";
+import { CREDIT_TIERS, DEFAULT_DOWN_PCT, DEFAULT_TERM, TERMS, monthlyPayment, salesTaxFor, type PromoRate } from "@/lib/finance";
+import { cad } from "@/lib/format";
 
 interface Props {
   price: number;
   condition: "new" | "used";
   sellerType: "dealer" | "private";
+  /** Two-letter province or territory code, for the default sales tax. */
+  province: string;
   promo?: PromoRate;
 }
 
-export function PaymentCalculator({ price, condition, sellerType, promo }: Props) {
+export function PaymentCalculator({ price, condition, sellerType, province, promo }: Props) {
   const id = useId();
   const promoEligible = !!promo && condition === "new" && sellerType === "dealer";
-  const defaultFees = sellerType === "private" ? 0 : condition === "new" ? 1200 : 400;
+  const defaultFees = sellerType === "private" ? 0 : condition === "new" ? 1500 : 400;
+  const tax = salesTaxFor(province);
 
   const [down, setDown] = useState(Math.round((price * DEFAULT_DOWN_PCT) / 100) * 100);
   const [tier, setTier] = useState<string>(CREDIT_TIERS[1].id);
   const [usePromo, setUsePromo] = useState(promoEligible);
   const [term, setTerm] = useState<number>(promoEligible && promo?.months ? promo.months : DEFAULT_TERM);
-  const [taxPct, setTaxPct] = useState(6);
+  const [taxPct, setTaxPct] = useState(tax.pct);
   const [fees, setFees] = useState(defaultFees);
 
   const standardApr = CREDIT_TIERS.find((t) => t.id === tier)!.apr;
@@ -45,7 +48,7 @@ export function PaymentCalculator({ price, condition, sellerType, promo }: Props
 
       <div className="mt-3 rounded-sm bg-carbon-950 p-4 text-center">
         <div className="font-display text-4xl font-bold italic tabular-nums text-white">
-          {usd(Math.round(payment))}<span className="text-lg text-zinc-500">/mo</span>
+          {cad(Math.round(payment))}<span className="text-lg text-zinc-500">/mo</span>
         </div>
         <div className="mt-1 text-xs text-zinc-500">
           {term} months at {apr.toFixed(2)}% APR{promoActive && <span className="font-semibold text-emerald-400"> · promo rate</span>}
@@ -99,11 +102,11 @@ export function PaymentCalculator({ price, condition, sellerType, promo }: Props
             </select>
           </div>
           <div>
-            <label className="label" htmlFor={`${id}-tax`}>Sales tax %</label>
+            <label className="label" htmlFor={`${id}-tax`}>{province} {tax.label} %</label>
             <input id={`${id}-tax`} type="number" min={0} max={15} step={0.25} value={taxPct} onChange={(e) => setTaxPct(Number(e.target.value) || 0)} className="field" />
           </div>
           <div>
-            <label className="label" htmlFor={`${id}-fees`}>{sellerType === "dealer" ? "Dealer fees" : "Fees"}</label>
+            <label className="label" htmlFor={`${id}-fees`}>{sellerType === "dealer" ? (condition === "new" ? "Freight, PDI & fees" : "Dealer fees") : "Fees"}</label>
             <input id={`${id}-fees`} type="number" min={0} step={50} value={fees} onChange={(e) => setFees(Number(e.target.value) || 0)} className="field" />
           </div>
         </div>
@@ -113,15 +116,16 @@ export function PaymentCalculator({ price, condition, sellerType, promo }: Props
       </div>
 
       <dl className="mt-4 space-y-1.5 border-t border-carbon-800 pt-4">
-        <Row k="Price" v={usd(price)} />
-        <Row k={`Tax + fees`} v={usd(Math.round(outTheDoor - price))} />
-        <Row k="Down payment" v={`− ${usd(Math.round(safeDown))}`} />
-        <Row k="Amount financed" v={usd(Math.round(financed))} strong />
-        <Row k="Total interest" v={usd(Math.round(Math.max(interest, 0)))} />
-        {promoSavings > 0 && <Row k="Saved vs. standard rate" v={usd(Math.round(promoSavings))} accent />}
+        <Row k="Price" v={cad(price)} />
+        <Row k={`Tax + fees`} v={cad(Math.round(outTheDoor - price))} />
+        <Row k="Down payment" v={`− ${cad(Math.round(safeDown))}`} />
+        <Row k="Amount financed" v={cad(Math.round(financed))} strong />
+        <Row k="Total interest" v={cad(Math.round(Math.max(interest, 0)))} />
+        {promoSavings > 0 && <Row k="Saved vs. standard rate" v={cad(Math.round(promoSavings))} accent />}
       </dl>
       <p className="mt-3 text-xs leading-relaxed text-zinc-600">
-        {sellerType === "dealer" && condition === "new" && "New units often carry freight and setup charges — ask for an out-the-door price. "}
+        {sellerType === "dealer" && condition === "new" && "New units usually carry freight and PDI charges, so ask for an all-in price. "}
+        {sellerType === "private" && "Private sales are taxed differently in each province, often when you register. Check your province's rules. "}
         Rates are typical ranges for powersports loans, not an offer of credit.
       </p>
     </div>

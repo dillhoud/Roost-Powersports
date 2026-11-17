@@ -47,7 +47,7 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
   const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
   const shown = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const models = CATALOG.filter((m) => (!category || m.category === category) && (!makes.length || makes.includes(m.make)));
-  const usageLabel = category === "atv" || category === "sxs" ? "Max hours" : category ? "Max miles" : "Max hours / miles";
+  const usageLabel = category === "atv" || category === "sxs" ? "Max hours" : category ? "Max km" : "Max hours / km";
   const dealCounts = Object.fromEntries(DEAL_RATINGS.map((d) => [d.id, rows.filter((r) => r.deal === d.id).length]));
 
   return (
@@ -143,13 +143,13 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
               <label className="label" htmlFor="near">Near</label>
               <select id="near" name="near" defaultValue={near ?? ""} className="field">
                 <option value="">Anywhere</option>
-                {CITIES.map((c) => <option key={c.name} value={c.name}>{c.name}, {c.state}</option>)}
+                {CITIES.map((c) => <option key={c.name} value={c.name}>{c.name}, {c.province}</option>)}
               </select>
             </div>
             <div>
               <label className="label" htmlFor="radius">Radius</label>
-              <select id="radius" name="radius" defaultValue={first(sp.radius) ?? "250"} className="field">
-                {[50, 100, 250, 500, 1000].map((r) => <option key={r} value={r}>{r} mi</option>)}
+              <select id="radius" name="radius" defaultValue={first(sp.radius) ?? "500"} className="field">
+                {[100, 250, 500, 1000, 2000].map((r) => <option key={r} value={r}>{r} km</option>)}
               </select>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
                 <option value="price-asc">Lowest price</option>
                 <option value="price-desc">Highest price</option>
                 <option value="year-desc">Newest year</option>
-                <option value="usage-asc">Lowest hours / miles</option>
+                <option value="usage-asc">Lowest hours / km</option>
                 <option value="newest">Newest listings</option>
                 <option value="drop-desc">Biggest price drop</option>
                 <option value="dom-desc">Longest on market</option>

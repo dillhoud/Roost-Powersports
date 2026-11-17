@@ -4,7 +4,7 @@ import { CATALOG, CATEGORIES, MAKES, USE_CASES } from "@/data/catalog";
 import { getIssues } from "@/lib/content";
 import { marketStats } from "@/lib/listings";
 import { scoreFor } from "@/lib/reviews";
-import { first, usd } from "@/lib/format";
+import { first, cad } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
 import { Stars } from "@/components/Stars";
 import { VehicleArt } from "@/components/VehicleArt";
@@ -78,7 +78,7 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
           <label className="label" htmlFor="mx">New price up to</label>
           <select id="mx" name="maxMsrp" defaultValue={first(sp.maxMsrp) ?? ""} className="field">
             <option value="">Any</option>
-            {[8000, 10000, 15000, 20000, 25000, 35000].map((v) => <option key={v} value={v}>{usd(v)}</option>)}
+            {[10000, 15000, 20000, 25000, 35000, 45000].map((v) => <option key={v} value={v}>{cad(v)}</option>)}
           </select>
         </div>
         <div>
@@ -111,8 +111,8 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
                 <div className={`rounded-sm p-2 ${majors ? "bg-red-500/10" : "bg-carbon-850"}`}><dt className="text-zinc-500">Known issues</dt><dd className="text-base font-bold">{issueCount}{majors ? <span className="text-red-400"> ({majors}!)</span> : ""}</dd></div>
               </dl>
               <div className="mt-auto flex justify-between pt-3 text-sm">
-                <span className="text-zinc-500">New from <b className="text-zinc-100">{usd(m.msrp)}</b></span>
-                {market.usedCount > 0 && <span className="text-zinc-500">Used avg <b className="text-zinc-100">{usd(market.avg)}</b></span>}
+                <span className="text-zinc-500">New from <b className="text-zinc-100">{cad(m.msrp)}</b></span>
+                {market.usedCount > 0 && <span className="text-zinc-500">Used avg <b className="text-zinc-100">{cad(market.avg)}</b></span>}
               </div>
             </div>
           </Link>

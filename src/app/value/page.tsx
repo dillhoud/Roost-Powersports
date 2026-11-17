@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CATALOG, CATEGORIES, categoryLabel, getModel, type VehicleModel } from "@/data/catalog";
 import { getIssues } from "@/lib/content";
 import { CURRENT_YEAR, allListings, estimateMarketValue, expectedUsagePerYear, rateDeal, usageUnit } from "@/lib/listings";
-import { first, num, usd } from "@/lib/format";
+import { first, num, cad } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
 import { DealBadge, DealMeter } from "@/components/DealBadge";
 import { ListingCard } from "@/components/ListingCard";
@@ -11,7 +11,7 @@ import { yearInRange } from "@/components/IssueCard";
 
 export const metadata: Metadata = {
   title: "What's my machine worth?",
-  description: "Free value estimate for your ATV, side-by-side, snowmobile or motorcycle: trade-in, private-party and dealer retail.",
+  description: "Free Canadian value estimate for your ATV, side-by-side, snowmobile or motorcycle: trade-in, private-party and dealer retail.",
 };
 
 type SP = Record<string, string | string[] | undefined>;
@@ -36,7 +36,7 @@ export default async function ValuePage({ searchParams }: { searchParams: Promis
       <div className="eyebrow text-brand-400">Free · no sign-up</div>
       <h1 className="display mt-3 text-5xl text-white md:text-6xl">What&apos;s my machine worth?</h1>
       <p className="mt-3 max-w-2xl text-zinc-400">
-        Pick your model, year and {m ? (usageUnit(m.category) === "hrs" ? "hours" : "miles") : "hours or miles"}. You get a trade-in, private-party and
+        Pick your model, year and {m ? (usageUnit(m.category) === "hrs" ? "hours" : "kilometres") : "hours or kilometres"}. You get a trade-in, private-party and
         dealer retail estimate from the same model we use to rate every listing on Roost.
       </p>
 
@@ -65,7 +65,7 @@ export default async function ValuePage({ searchParams }: { searchParams: Promis
           />
         </div>
         <div>
-          <label className="label" htmlFor="usage">{m && usageUnit(m.category) === "mi" ? "Miles" : "Hours / miles"}</label>
+          <label className="label" htmlFor="usage">{m && usageUnit(m.category) === "km" ? "Kilometres" : "Hours / km"}</label>
           <input id="usage" name="usage" type="number" min={0} defaultValue={m ? usage : undefined} key={`u-${m?.slug}`} placeholder={m ? `Typical: ${num(typicalUsage)}` : ""} className="field" />
         </div>
         <div>
@@ -119,7 +119,7 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
         </div>
         <div className="grid gap-px bg-carbon-800 sm:grid-cols-3">
           <ValueTile label="Trade-in" value={tradeIn} note="What a dealer will likely offer. They need room to recondition and resell." />
-          <ValueTile label="Private party" value={privateParty} note={`Selling it yourself. Most sell between ${usd(low)} and ${usd(high)}.`} highlight />
+          <ValueTile label="Private party" value={privateParty} note={`Selling it yourself. Most sell between ${cad(low)} and ${cad(high)}.`} highlight />
           <ValueTile label="Dealer retail" value={retail} note="What a dealer would typically ask for one like it." />
         </div>
       </section>
@@ -127,13 +127,13 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
       {ask !== undefined && (
         <section className="card p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-lg font-bold">Checking {usd(ask)}</h2>
+            <h2 className="text-lg font-bold">Checking {cad(ask)}</h2>
             <DealBadge deal={rateDeal(ask, privateParty)} size="lg" />
           </div>
           <p className="mt-2 text-sm text-zinc-400">
             {ask <= privateParty
-              ? <>That&apos;s <b>{usd(privateParty - ask)} below</b> the private-party value. Good for a buyer, low for a seller.</>
-              : <>That&apos;s <b>{usd(ask - privateParty)} above</b> the private-party value. Expect buyers to negotiate unless it has extras or recent work.</>}
+              ? <>That&apos;s <b>{cad(privateParty - ask)} below</b> the private-party value. Good for a buyer, low for a seller.</>
+              : <>That&apos;s <b>{cad(ask - privateParty)} above</b> the private-party value. Expect buyers to negotiate unless it has extras or recent work.</>}
           </p>
           <div className="mt-4 max-w-xl"><DealMeter price={ask} market={privateParty} /></div>
         </section>
@@ -141,13 +141,13 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
 
       <div className="grid gap-6 lg:grid-cols-3">
         <section className="card p-6 text-sm">
-          <h2 className="font-bold">How {unit === "hrs" ? "hours" : "miles"} change the value</h2>
+          <h2 className="font-bold">How {unit === "hrs" ? "hours" : "kilometres"} change the value</h2>
           <p className="mt-1 text-zinc-500">A typical {year} has about {num(typicalUsage)} {unit}.</p>
           <ul className="mt-4 space-y-2">
             {usageSteps.map((s) => (
               <li key={s.label} className="flex justify-between">
                 <span className="text-zinc-400">{s.label} <span className="text-zinc-600">· {num(s.usage)} {unit}</span></span>
-                <span className="font-semibold">{usd(s.value)}</span>
+                <span className="font-semibold">{cad(s.value)}</span>
               </li>
             ))}
           </ul>
@@ -160,7 +160,7 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
           </p>
           <div className="mt-4 flex justify-between border-t border-carbon-800 pt-3">
             <span className="text-zinc-500">Estimated a year from now</span>
-            <span className="font-semibold">{usd(nextYear)}</span>
+            <span className="font-semibold">{cad(nextYear)}</span>
           </div>
           <p className="mt-1 text-xs text-zinc-600">At similar use. Selling before the riding season usually helps.</p>
         </section>
@@ -185,7 +185,7 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
         <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="font-display text-3xl font-bold uppercase italic tracking-tight text-white">Similar ones for sale</h2>
           {comps.length > 0 && (
-            <span className="text-sm text-zinc-500">{comps.length} used {year - 2}–{year + 2} listings · average asking {usd(compAvg)}</span>
+            <span className="text-sm text-zinc-500">{comps.length} used {year - 2}–{year + 2} listings · average asking {cad(compAvg)}</span>
           )}
         </div>
         {comps.length ? (
@@ -199,7 +199,7 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
       </section>
 
       <p className="text-xs leading-relaxed text-zinc-600">
-        Estimates come from MSRP, the model&apos;s typical depreciation, age and {unit === "hrs" ? "hours" : "miles"} compared with normal use. They don&apos;t
+        Estimates come from MSRP, the model&apos;s typical depreciation, age and {unit === "hrs" ? "hours" : "kilometres"} compared with normal use. They don&apos;t
         account for condition, accessories, title status or local demand. Get an inspection and compare local listings before you buy or sell.
       </p>
     </div>
@@ -210,7 +210,7 @@ function ValueTile({ label, value, note, highlight }: { label: string; value: nu
   return (
     <div className={`p-6 ${highlight ? "bg-carbon-850" : "bg-carbon-900"}`}>
       <div className={`eyebrow ${highlight ? "text-brand-400" : "text-zinc-500"}`}>{label}</div>
-      <div className="mt-2 font-display text-5xl font-bold italic tabular-nums text-white">{usd(value)}</div>
+      <div className="mt-2 font-display text-5xl font-bold italic tabular-nums text-white">{cad(value)}</div>
       <p className="mt-2 text-sm text-zinc-500">{note}</p>
     </div>
   );
