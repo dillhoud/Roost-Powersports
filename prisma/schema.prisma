@@ -76,3 +76,35 @@ model Promo {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
+
+enum SourceStatus {
+  new
+  ok
+  changed
+  error
+}
+
+/// A brand's offers page that the site checks daily for changes.
+model OfferSource {
+  id            String       @id @default(cuid())
+  make          String
+  url           String
+  label         String       @default("")
+  active        Boolean      @default(true)
+  status        SourceStatus @default(new)
+  /// True when the page changed since someone last reviewed it
+  needsReview   Boolean      @default(false)
+  /// Offer-related lines from the latest check, and from the one before it
+  text          String?
+  previousText  String?
+  hash          String?
+  httpStatus    Int?
+  error         String?
+  lastCheckedAt DateTime?
+  lastChangedAt DateTime?
+  reviewedAt    DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([make])
+}

@@ -25,6 +25,11 @@ export default async function AdminHome() {
     prisma.issue.findMany({ where: { published: true, lastVerified: null }, orderBy: { mentions: "desc" }, take: 6 }),
   ]);
 
+  const [changedPages, sourceCount] = await Promise.all([
+    prisma.offerSource.findMany({ where: { needsReview: true }, orderBy: { lastChangedAt: "desc" } }),
+    prisma.offerSource.count(),
+  ]);
+
   const empty = issues + drafts === 0 && promosLive + promosExpired + promosUnchecked === 0 && (await prisma.promo.count()) === 0;
 
   return (
@@ -41,6 +46,20 @@ export default async function AdminHome() {
         <h1 className="font-display text-4xl font-bold uppercase italic tracking-tight text-white">Overview</h1>
         <p className="mt-1 text-sm text-zinc-500">What&apos;s live on the site and what needs a look.</p>
       </div>
+
+      {changedPages.length > 0 ? (
+        <Link href="/admin/sources" className="card block border-amber-500/40 bg-amber-500/5 p-5 transition hover:border-amber-400">
+          <div className="font-semibold text-amber-300">
+            {changedPages.length} offer page{changedPages.length > 1 ? "s" : ""} changed: {changedPages.map((p) => p.make).join(", ")}
+          </div>
+          <p className="mt-1 text-sm text-zinc-400">Check whether offers were added, changed or ended, update your deals, then mark the page reviewed. →</p>
+        </Link>
+      ) : sourceCount === 0 ? (
+        <Link href="/admin/sources" className="card block p-5 transition hover:border-brand-500">
+          <div className="font-semibold text-white">Keep deals up to date automatically</div>
+          <p className="mt-1 text-sm text-zinc-400">Add each brand&apos;s offers page and the site will check it every morning and tell you when it changes. →</p>
+        </Link>
+      ) : null}
 
       <div className="grid gap-px overflow-hidden rounded-sm border border-carbon-800 bg-carbon-800 sm:grid-cols-3 lg:grid-cols-6">
         <Stat n={issues} label="Issues live" href="/admin/issues" />

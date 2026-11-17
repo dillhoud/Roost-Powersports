@@ -38,7 +38,7 @@ export interface Promo {
   lastVerified?: string;
 }
 
-const BRAND_SITES: Record<string, string> = {
+export const BRAND_SITES: Record<string, string> = {
   // Canadian sites where the brand has one, so riders see Canadian offers.
   Polaris: "https://www.polaris.com/en-ca/",
   "Can-Am": "https://can-am.brp.com/off-road/ca/en/",
