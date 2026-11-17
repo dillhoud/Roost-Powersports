@@ -3,7 +3,7 @@ import { Wordmark } from "./Header";
 
 const COLS = [
   { title: "Shop", links: [["ATVs", "/listings?category=atv"], ["Side-by-sides", "/listings?category=sxs"], ["Snowmobiles", "/listings?category=snowmobile"], ["Motorcycles", "/listings?category=motorcycle"]] },
-  { title: "Research", links: [["Compare models", "/research"], ["Owner reviews", "/reviews"], ["Known issues", "/issues"]] },
+  { title: "Research", links: [["Compare models", "/research"], ["Owner reviews", "/reviews"], ["Known issues", "/issues"], ["What's my machine worth?", "/value"]] },
   { title: "Save", links: [["All offers", "/deals"], ["Military & first responder", "/deals?type=military&type=first-responder"], ["Pro & industry", "/deals?type=pro"], ["Farm & ag", "/deals?type=ag"]] },
 ];
 
@@ -13,7 +13,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 text-sm md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <Wordmark className="text-white" />
-          <p className="mt-4 max-w-xs leading-relaxed">Powersports marketplace and research. Prices checked against the market, problems reported by owners.</p>
+          <p className="mt-4 max-w-xs leading-relaxed">Canada&apos;s powersports marketplace and research. Prices checked against the market, problems reported by owners. All prices in Canadian dollars.</p>
         </div>
         {COLS.map((c) => (
           <div key={c.title}>
@@ -28,7 +28,7 @@ export function Footer() {
       </div>
       <div className="border-t border-carbon-800">
         <p className="mx-auto max-w-7xl px-4 py-6 text-xs leading-relaxed text-zinc-600">
-          Preview build — listings, reviews and prices are sample data. Known-issue summaries reflect recurring owner discussion and
+          Preview build — Canada only. Listings, reviews and prices are sample data in CAD. Known-issue summaries reflect recurring owner discussion and
           are not a substitute for an inspection or a VIN recall check. Confirm offers and eligibility with the manufacturer or dealer.
         </p>
       </div>

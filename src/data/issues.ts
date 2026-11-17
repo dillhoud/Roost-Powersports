@@ -51,7 +51,7 @@ const RAW: Raw[] = [
 
   // RZR XP 1000
   { modelSlug: "polaris-rzr-xp-1000", title: "Drive belt wear / failure", severity: "moderate", kind: "owner-reported", years: "All", symptoms: "Belt shreds on climbs, in low-speed high-load riding, or with bigger tires.", fix: "Use low range below ~15 mph, break in new belts, recalibrate clutching for larger tires; carry a spare.", estCost: "$150–$250 per belt", mentions: 920, sources: ["r/RZR", "RZRForums"] },
-  { modelSlug: "polaris-rzr-xp-1000", title: "Fire-risk recalls on some model years", severity: "major", kind: "recall", years: "Some 2014–2016", symptoms: "Recalls addressed heat/fire risks on certain units.", fix: "Run the VIN through the manufacturer recall lookup and confirm all work is completed.", estCost: "Free (recall)", mentions: 300, sources: ["NHTSA / CPSC recall notices", "r/RZR"] },
+  { modelSlug: "polaris-rzr-xp-1000", title: "Fire-risk recalls on some model years", severity: "major", kind: "recall", years: "Some 2014–2016", symptoms: "Recalls addressed heat/fire risks on certain units.", fix: "Run the VIN through the manufacturer recall lookup and confirm all work is completed.", estCost: "Free (recall)", mentions: 300, sources: ["Transport Canada recall notices", "r/RZR"] },
   { modelSlug: "polaris-rzr-xp-1000", title: "Cab heat on the driver's side", severity: "minor", kind: "owner-reported", years: "2014–2023", symptoms: "Hot air through the floor and console.", fix: "Heat shielding and console vent kits.", estCost: "$50–$200", mentions: 340, sources: ["RZRForums"] },
 
   // RZR Pro R

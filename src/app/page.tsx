@@ -5,7 +5,7 @@ import { promoTypeLabel } from "@/data/promos";
 import { getIssues, getPromos } from "@/lib/content";
 import { allListings, CITIES, DEAL_RATINGS, type Listing } from "@/lib/listings";
 import { scoreFor } from "@/lib/reviews";
-import { daysUntil, num, shortDate, usd } from "@/lib/format";
+import { daysUntil, num, shortDate, cad } from "@/lib/format";
 
 const SHORT: Record<Category, string> = { atv: "ATV", sxs: "SXS", snowmobile: "Snow", motorcycle: "Moto" };
 
@@ -34,7 +34,7 @@ export default async function Home() {
         <Stripes />
         <div className="relative mx-auto grid max-w-7xl gap-12 px-4 pb-16 pt-14 md:pt-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div className="min-w-0">
-            <div className="eyebrow text-brand-400">ATV · Side-by-side · Snow · Moto</div>
+            <div className="eyebrow text-brand-400">Across Canada · ATV · Side-by-side · Snow · Moto</div>
             <h1 className="display mt-5 text-[64px] sm:text-[88px] lg:text-[112px]">
               Buy it right.
               <br />
@@ -63,9 +63,9 @@ export default async function Home() {
                 </select>
                 <select name="near" aria-label="Near" className="bg-carbon-900 px-3 py-3.5 text-sm text-zinc-300 focus:outline-none">
                   <option value="">Anywhere</option>
-                  {CITIES.map((c) => <option key={c.name} value={c.name}>{c.name}, {c.state}</option>)}
+                  {CITIES.map((c) => <option key={c.name} value={c.name}>{c.name}, {c.province}</option>)}
                 </select>
-                <input type="hidden" name="radius" value="250" />
+                <input type="hidden" name="radius" value="500" />
                 <button className="bg-brand-500 px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-brand-600">
                   Search
                 </button>
@@ -112,7 +112,7 @@ export default async function Home() {
                   <div className="mt-1 text-sm text-zinc-500">{c.blurb}</div>
                   <div className="mt-10 flex flex-wrap items-baseline gap-x-3 text-sm">
                     <span className="font-semibold text-white">{ls.length} listed</span>
-                    <span className="text-zinc-500">from {usd(from)}</span>
+                    <span className="text-zinc-500">from {cad(from)}</span>
                   </div>
                   <span className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-brand-400 transition group-hover:translate-x-1">Browse →</span>
                 </div>
@@ -281,13 +281,13 @@ function FeaturedDeal({ l }: { l: Listing }) {
           {l.year} {l.model.make} {l.model.model}
         </div>
         <div className="mt-1.5 text-xs text-zinc-500">
-          {num(l.usage)} {l.usageUnit} · {l.city.name}, {l.city.state} ·{" "}
+          {num(l.usage)} {l.usageUnit} · {l.city.name}, {l.city.province} ·{" "}
           <span className="whitespace-nowrap font-semibold text-emerald-400">{pct}% under market</span>
         </div>
       </div>
       <div className="text-right">
-        <div className="font-display text-3xl font-bold tabular-nums text-white">{usd(l.price)}</div>
-        <div className="text-xs tabular-nums text-zinc-500 line-through">{usd(l.marketValue)}</div>
+        <div className="font-display text-3xl font-bold tabular-nums text-white">{cad(l.price)}</div>
+        <div className="text-xs tabular-nums text-zinc-500 line-through">{cad(l.marketValue)}</div>
       </div>
     </Link>
   );
@@ -297,7 +297,7 @@ function DealCard({ l }: { l: Listing }) {
   return (
     <Link href={`/listings/${l.id}`} className="group flex flex-col rounded-sm border border-carbon-800 bg-carbon-900 p-5 transition hover:border-carbon-600">
       <div className="flex items-center justify-between">
-        <span className="eyebrow text-zinc-500">{SHORT[l.model.category]} · {l.city.state}</span>
+        <span className="eyebrow text-zinc-500">{SHORT[l.model.category]} · {l.city.province}</span>
         <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400">{dealLabel(l)}</span>
       </div>
       <div className="mt-4 font-semibold leading-snug text-white group-hover:text-brand-400">
@@ -305,9 +305,9 @@ function DealCard({ l }: { l: Listing }) {
       </div>
       <div className="mt-1 text-xs text-zinc-500">{num(l.usage)} {l.usageUnit} · {l.sellerType === "dealer" ? "Dealer" : "Private"}</div>
       <div className="mt-auto pt-6">
-        <div className="font-display text-3xl font-bold tabular-nums text-white">{usd(l.price)}</div>
+        <div className="font-display text-3xl font-bold tabular-nums text-white">{cad(l.price)}</div>
         <div className="mt-1 text-xs text-zinc-500">
-          <span className="font-semibold text-emerald-400">{usd(l.savings)} under</span> est. {usd(l.marketValue)}
+          <span className="font-semibold text-emerald-400">{cad(l.savings)} under</span> est. {cad(l.marketValue)}
         </div>
       </div>
     </Link>

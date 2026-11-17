@@ -1,6 +1,7 @@
 import Link from "next/link";
-import type { Listing } from "@/lib/listings";
-import { usd, num } from "@/lib/format";
+import { JUST_LISTED_DAYS, STALE_DAYS, lastDropDaysAgo, type Listing } from "@/lib/listings";
+import { estPayment } from "@/lib/finance";
+import { cad, num } from "@/lib/format";
 import { DealBadge } from "./DealBadge";
 import { VehicleArt } from "./VehicleArt";
 
@@ -15,19 +16,23 @@ export function ListingCard({ l, distance }: { l: Listing; distance?: number }) 
               {l.year} {l.model.make} {l.model.model}
             </h3>
             <p className="text-sm text-zinc-500">
-              {l.condition === "new" ? "New" : `${num(l.usage)} ${l.usageUnit}`} · {l.color} · {l.city.name}, {l.city.state}
-              {distance !== undefined && ` (${distance} mi)`}
+              {l.condition === "new" ? "New" : `${num(l.usage)} ${l.usageUnit}`} · {l.color} · {l.city.name}, {l.city.province}
+              {distance !== undefined && ` (${distance} km)`}
             </p>
           </div>
           <div className="text-right">
-            <div className="text-xl font-extrabold">{usd(l.price)}</div>
-            {l.priceDrop > 0 && <div className="text-xs font-semibold text-emerald-400">↓ {usd(l.priceDrop)} price drop</div>}
+            <div className="text-xl font-extrabold">{cad(l.price)}</div>
+            {l.priceDrop > 0 ? (
+              <div className="text-xs font-semibold text-emerald-400">↓ {cad(l.priceDrop)} · {ago(lastDropDaysAgo(l) ?? 0)}</div>
+            ) : (
+              <div className="text-xs text-zinc-500">≈ {cad(estPayment(l.price))}/mo est.</div>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <DealBadge deal={l.deal} />
           <span className="text-xs text-zinc-500">
-            {l.savings >= 0 ? `${usd(l.savings)} below` : `${usd(-l.savings)} above`} est. market {usd(l.marketValue)}
+            {l.savings >= 0 ? `${cad(l.savings)} below` : `${cad(-l.savings)} above`} est. market {cad(l.marketValue)}
           </span>
         </div>
         <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
@@ -37,9 +42,19 @@ export function ListingCard({ l, distance }: { l: Listing; distance?: number }) 
             <span key={f} className="chip">{f}</span>
           ))}
           <span className="chip">{l.sellerType === "dealer" ? l.seller : "Private seller"}</span>
-          <span className="chip">{l.daysOnMarket}d on market</span>
+          {l.daysOnMarket <= JUST_LISTED_DAYS ? (
+            <span className="chip border-brand-500/40 bg-brand-500/10 text-brand-400">Just listed</span>
+          ) : l.daysOnMarket >= STALE_DAYS ? (
+            <span className="chip border-amber-500/30 bg-amber-500/10 text-amber-300">{l.daysOnMarket} days listed · make an offer</span>
+          ) : (
+            <span className="chip">{l.daysOnMarket}d on market</span>
+          )}
         </div>
       </div>
     </Link>
   );
+}
+
+function ago(days: number) {
+  return days === 0 ? "dropped today" : days === 1 ? "dropped yesterday" : `dropped ${days}d ago`;
 }

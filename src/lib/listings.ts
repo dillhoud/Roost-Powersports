@@ -15,37 +15,40 @@ export const DEAL_RATINGS: { id: DealRating; label: string; maxRatio: number }[]
 
 export interface City {
   name: string;
-  state: string;
+  province: string;
   lat: number;
   lon: number;
 }
 
+/** Roost is Canada only. */
 export const CITIES: City[] = [
-  { name: "Boise", state: "ID", lat: 43.62, lon: -116.2 },
-  { name: "Salt Lake City", state: "UT", lat: 40.76, lon: -111.89 },
-  { name: "Denver", state: "CO", lat: 39.74, lon: -104.99 },
-  { name: "Phoenix", state: "AZ", lat: 33.45, lon: -112.07 },
-  { name: "Las Vegas", state: "NV", lat: 36.17, lon: -115.14 },
-  { name: "Dallas", state: "TX", lat: 32.78, lon: -96.8 },
-  { name: "Houston", state: "TX", lat: 29.76, lon: -95.37 },
-  { name: "Minneapolis", state: "MN", lat: 44.98, lon: -93.27 },
-  { name: "Duluth", state: "MN", lat: 46.79, lon: -92.1 },
-  { name: "Green Bay", state: "WI", lat: 44.51, lon: -88.01 },
-  { name: "Grand Rapids", state: "MI", lat: 42.96, lon: -85.67 },
-  { name: "Marquette", state: "MI", lat: 46.55, lon: -87.4 },
-  { name: "Fargo", state: "ND", lat: 46.88, lon: -96.79 },
-  { name: "Billings", state: "MT", lat: 45.78, lon: -108.5 },
-  { name: "Spokane", state: "WA", lat: 47.66, lon: -117.43 },
-  { name: "Bend", state: "OR", lat: 44.06, lon: -121.31 },
-  { name: "Nashville", state: "TN", lat: 36.16, lon: -86.78 },
-  { name: "Atlanta", state: "GA", lat: 33.75, lon: -84.39 },
-  { name: "Charlotte", state: "NC", lat: 35.23, lon: -80.84 },
-  { name: "Burlington", state: "VT", lat: 44.48, lon: -73.21 },
-  { name: "Bangor", state: "ME", lat: 44.8, lon: -68.77 },
-  { name: "Columbus", state: "OH", lat: 39.96, lon: -83.0 },
+  { name: "Vancouver", province: "BC", lat: 49.28, lon: -123.12 },
+  { name: "Kamloops", province: "BC", lat: 50.67, lon: -120.33 },
+  { name: "Kelowna", province: "BC", lat: 49.89, lon: -119.5 },
+  { name: "Prince George", province: "BC", lat: 53.92, lon: -122.75 },
+  { name: "Calgary", province: "AB", lat: 51.05, lon: -114.07 },
+  { name: "Red Deer", province: "AB", lat: 52.27, lon: -113.81 },
+  { name: "Edmonton", province: "AB", lat: 53.55, lon: -113.49 },
+  { name: "Grande Prairie", province: "AB", lat: 55.17, lon: -118.8 },
+  { name: "Saskatoon", province: "SK", lat: 52.13, lon: -106.67 },
+  { name: "Regina", province: "SK", lat: 50.45, lon: -104.61 },
+  { name: "Winnipeg", province: "MB", lat: 49.9, lon: -97.14 },
+  { name: "Thunder Bay", province: "ON", lat: 48.38, lon: -89.25 },
+  { name: "Sudbury", province: "ON", lat: 46.49, lon: -80.99 },
+  { name: "Barrie", province: "ON", lat: 44.39, lon: -79.69 },
+  { name: "London", province: "ON", lat: 42.98, lon: -81.25 },
+  { name: "Ottawa", province: "ON", lat: 45.42, lon: -75.7 },
+  { name: "Montréal", province: "QC", lat: 45.5, lon: -73.57 },
+  { name: "Québec City", province: "QC", lat: 46.81, lon: -71.21 },
+  { name: "Saguenay", province: "QC", lat: 48.43, lon: -71.07 },
+  { name: "Moncton", province: "NB", lat: 46.09, lon: -64.78 },
+  { name: "Halifax", province: "NS", lat: 44.65, lon: -63.58 },
+  { name: "St. John's", province: "NL", lat: 47.56, lon: -52.71 },
+  { name: "Whitehorse", province: "YT", lat: 60.72, lon: -135.06 },
 ];
 
-const SNOW_STATES = new Set(["ID", "UT", "CO", "MN", "WI", "MI", "ND", "MT", "WA", "OR", "VT", "ME"]);
+/** Places with too little reliable snow to stock many sleds. */
+const LOW_SNOW_CITIES = new Set(["Vancouver"]);
 
 const DEALER_PREFIX = ["Summit", "Trailhead", "Northwoods", "Iron Horse", "Backcountry", "Rocky Ridge", "Big Sky", "Lakeside", "Redline", "Timberline"];
 const DEALER_SUFFIX = ["Powersports", "Motorsports", "Outdoor", "Power & Sport", "Cycle & Sled"];
@@ -68,7 +71,7 @@ export interface Listing {
   deal: DealRating;
   savings: number; // marketValue - price (positive = under market)
   usage: number;
-  usageUnit: "hrs" | "mi";
+  usageUnit: "hrs" | "km";
   city: City;
   seller: string;
   sellerType: "dealer" | "private";
@@ -81,12 +84,12 @@ export interface Listing {
   history: { daysAgo: number; price: number }[];
 }
 
-export function usageUnit(c: Category): "hrs" | "mi" {
-  return c === "atv" || c === "sxs" ? "hrs" : "mi";
+export function usageUnit(c: Category): "hrs" | "km" {
+  return c === "atv" || c === "sxs" ? "hrs" : "km";
 }
 
-function expectedUsagePerYear(c: Category) {
-  return { atv: 70, sxs: 90, snowmobile: 1200, motorcycle: 3500 }[c];
+export function expectedUsagePerYear(c: Category) {
+  return { atv: 70, sxs: 90, snowmobile: 2000, motorcycle: 5600 }[c]; // hours or km
 }
 
 /** Estimated fair market value for a given model, year and usage. */
@@ -108,7 +111,7 @@ export function rateDeal(price: number, market: number): DealRating {
 function generateForModel(m: VehicleModel): Listing[] {
   const rand = mulberry32(hash(m.slug));
   const count = 7 + Math.floor(rand() * 8);
-  const cities = m.category === "snowmobile" ? CITIES.filter((c) => SNOW_STATES.has(c.state)) : CITIES;
+  const cities = m.category === "snowmobile" ? CITIES.filter((c) => !LOW_SNOW_CITIES.has(c.name)) : CITIES;
   const out: Listing[] = [];
   for (let i = 0; i < count; i++) {
     const isNew = rand() < 0.28;
@@ -169,8 +172,8 @@ export function getListing(id: string) {
   return allListings().find((l) => l.id === id);
 }
 
-export function distanceMiles(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
-  const R = 3959;
+export function distanceKm(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
+  const R = 6371;
   const dLat = ((b.lat - a.lat) * Math.PI) / 180;
   const dLon = ((b.lon - a.lon) * Math.PI) / 180;
   const h = Math.sin(dLat / 2) ** 2 + Math.cos((a.lat * Math.PI) / 180) * Math.cos((b.lat * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
@@ -192,6 +195,12 @@ export interface ListingFilters {
   near?: string;
   radius?: number;
   seller?: string;
+  /** Only listings that have dropped their price. */
+  drop?: boolean;
+  /** Listed at least this many days (older listings = more room to negotiate). */
+  minDays?: number;
+  /** Listed at most this many days. */
+  maxDays?: number;
   sort?: string;
 }
 
@@ -201,7 +210,7 @@ export function filterListings(f: ListingFilters) {
   const origin = f.near ? CITIES.find((c) => c.name === f.near) : undefined;
   const q = f.q?.trim().toLowerCase();
   let rows = allListings()
-    .map((l) => ({ ...l, distance: origin ? distanceMiles(origin, l.city) : undefined }))
+    .map((l) => ({ ...l, distance: origin ? distanceKm(origin, l.city) : undefined }))
     .filter((l) => {
       if (q && !`${l.year} ${l.model.make} ${l.model.model} ${l.model.segment}`.toLowerCase().includes(q)) return false;
       if (f.category && l.model.category !== f.category) return false;
@@ -215,6 +224,9 @@ export function filterListings(f: ListingFilters) {
       if (f.maxYear && l.year > f.maxYear) return false;
       if (f.maxUsage && l.usage > f.maxUsage) return false;
       if (f.seller && l.sellerType !== f.seller) return false;
+      if (f.drop && l.priceDrop <= 0) return false;
+      if (f.minDays && l.daysOnMarket < f.minDays) return false;
+      if (f.maxDays && l.daysOnMarket > f.maxDays) return false;
       if (origin && f.radius && (l.distance ?? 0) > f.radius) return false;
       return true;
     });
@@ -225,6 +237,8 @@ export function filterListings(f: ListingFilters) {
     "year-desc": (a, b) => b.year - a.year,
     "usage-asc": (a, b) => a.usage - b.usage,
     newest: (a, b) => a.daysOnMarket - b.daysOnMarket,
+    "dom-desc": (a, b) => b.daysOnMarket - a.daysOnMarket,
+    "drop-desc": (a, b) => b.priceDrop - a.priceDrop || b.daysOnMarket - a.daysOnMarket,
     closest: (a, b) => (a.distance ?? 0) - (b.distance ?? 0),
   };
   rows = rows.sort(sorters[f.sort ?? "best"] ?? sorters.best);
@@ -244,6 +258,30 @@ export function marketStats(slug: string) {
     avg,
     greatDeals: ls.filter((l) => l.deal === "great" || l.deal === "good").length,
   };
+}
+
+/** Days since the most recent price drop, if there was one. */
+export function lastDropDaysAgo(l: Listing) {
+  return l.history.length > 1 ? l.history[l.history.length - 1].daysAgo : undefined;
+}
+
+export const JUST_LISTED_DAYS = 3;
+export const STALE_DAYS = 60;
+
+export type MarketTimeLevel = "fresh" | "typical" | "long";
+
+/**
+ * How long this listing has been up compared with others of the same type,
+ * and what that means for a buyer.
+ */
+export function timeOnMarket(l: Listing) {
+  const peers = allListings().filter((x) => x.model.category === l.model.category);
+  const days = peers.map((x) => x.daysOnMarket).sort((a, b) => a - b);
+  const median = days[Math.floor(days.length / 2)];
+  const longerThanPct = Math.round((peers.filter((x) => x.daysOnMarket < l.daysOnMarket).length / peers.length) * 100);
+  const level: MarketTimeLevel =
+    l.daysOnMarket <= 7 ? "fresh" : l.daysOnMarket >= STALE_DAYS || longerThanPct >= 75 ? "long" : "typical";
+  return { days: l.daysOnMarket, median, longerThanPct, level };
 }
 
 export { getModel };
