@@ -7,6 +7,7 @@ import { allListings, getListing, timeOnMarket } from "@/lib/listings";
 import { bestPromoRate } from "@/lib/finance";
 import { CATEGORIES } from "@/data/catalog";
 import { PaymentCalculator } from "@/components/PaymentCalculator";
+import { compareHref, rivals } from "@/lib/compare";
 import { scoreFor } from "@/lib/reviews";
 import { num, cad } from "@/lib/format";
 import { DealBadge, DealMeter } from "@/components/DealBadge";
@@ -85,7 +86,10 @@ export default async function ListingPage({ params }: Props) {
           <div className="card p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-lg font-bold">Known issues for the {m.make} {m.model}</h2>
-              <Link href={`/research/${m.slug}#issues`} className="text-sm font-semibold text-brand-400 hover:underline">Full model report →</Link>
+              <div className="flex flex-wrap gap-4">
+                <Link href={compareHref([m.slug, ...rivals(m).map((r) => r.slug)])} className="text-sm font-semibold text-brand-400 hover:underline">Compare with rivals →</Link>
+                <Link href={`/research/${m.slug}#issues`} className="text-sm font-semibold text-brand-400 hover:underline">Full model report →</Link>
+              </div>
             </div>
             <p className="mt-1 text-sm text-zinc-500">What owners report most — ask the seller about these before you buy.</p>
             <div className="mt-4 space-y-3">

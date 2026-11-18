@@ -6,6 +6,7 @@ import { marketStats } from "@/lib/listings";
 import { scoreFor } from "@/lib/reviews";
 import { first, cad } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
+import { compareHref, rivals } from "@/lib/compare";
 import { Stars } from "@/components/Stars";
 import { VehicleArt } from "@/components/VehicleArt";
 
@@ -49,7 +50,10 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
           <h1 className="font-display text-4xl font-bold uppercase italic tracking-tight text-white">Research &amp; compare</h1>
           <p className="mt-1 text-zinc-500">Owner ratings, known issues and real market prices for every model.</p>
         </div>
-        <Link href="/reviews" className="btn-ghost">Browse all owner reviews →</Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/compare" className="btn-primary">Compare side by side</Link>
+          <Link href="/reviews" className="btn-ghost">Browse all owner reviews →</Link>
+        </div>
       </div>
 
       <AutoSubmitForm className="card mt-6 grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -95,7 +99,8 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {rows.map(({ m, s, market, majors, issueCount }) => (
-          <Link key={m.slug} href={`/research/${m.slug}`} className="card group flex flex-col overflow-hidden transition hover:shadow-md">
+          <div key={m.slug} className="card group flex flex-col overflow-hidden transition hover:shadow-md">
+          <Link href={`/research/${m.slug}`} className="flex flex-1 flex-col">
             <VehicleArt category={m.category} className="h-36" />
             <div className="flex flex-1 flex-col p-4">
               <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">{m.segment}</div>
@@ -116,6 +121,12 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
               </div>
             </div>
           </Link>
+          <div className="border-t border-carbon-800 px-4 py-2.5 text-xs">
+            <Link href={compareHref([m.slug, ...rivals(m, 1).map((r) => r.slug)])} className="font-semibold text-brand-400 hover:underline">
+              Compare with {rivals(m, 1)[0]?.model ?? "others"} →
+            </Link>
+          </div>
+          </div>
         ))}
       </div>
     </div>
