@@ -7,6 +7,7 @@ import { scoreFor } from "@/lib/reviews";
 import { first, cad } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
 import { compareHref, rivals } from "@/lib/compare";
+import { CompareToggle } from "@/components/CompareTray";
 import { Stars } from "@/components/Stars";
 import { VehicleArt } from "@/components/VehicleArt";
 
@@ -48,7 +49,7 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-4xl font-bold uppercase italic tracking-tight text-white">Research &amp; compare</h1>
-          <p className="mt-1 text-zinc-500">Owner ratings, known issues and real market prices for every model.</p>
+          <p className="mt-1 text-zinc-500">Owner ratings, known issues and real market prices for every model. Tick <b className="text-zinc-300">Compare</b> on up to 3 to see them side by side.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link href="/compare" className="btn-primary">Compare side by side</Link>
@@ -121,9 +122,10 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
               </div>
             </div>
           </Link>
-          <div className="border-t border-carbon-800 px-4 py-2.5 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-carbon-800 px-4 py-2.5 text-xs">
+            <CompareToggle slug={m.slug} name={`${m.make} ${m.model}`} />
             <Link href={compareHref([m.slug, ...rivals(m, 1).map((r) => r.slug)])} className="font-semibold text-brand-400 hover:underline">
-              Compare with {rivals(m, 1)[0]?.model ?? "others"} →
+              vs {rivals(m, 1)[0]?.model ?? "others"} →
             </Link>
           </div>
           </div>
