@@ -6,6 +6,7 @@ const NAV = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/issues", label: "Known issues" },
   { href: "/admin/deals", label: "Deals" },
+  { href: "/admin/sources", label: "Offer pages" },
 ];
 
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {
@@ -15,7 +16,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-carbon-800 pb-4">
         <div className="flex items-center gap-6">
           <span className="eyebrow rounded-sm bg-brand-500 px-2 py-1 text-white">Admin</span>
-          <nav className="flex gap-5">
+          <nav className="flex flex-wrap gap-x-5 gap-y-2">
             {NAV.map((n) => (
               <Link key={n.href} href={n.href} className="text-sm font-semibold uppercase tracking-wider text-zinc-400 hover:text-white">
                 {n.label}

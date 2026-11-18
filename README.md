@@ -45,6 +45,7 @@ A password-protected area for managing **known issues** and **deals** without to
 - Source links on issues (shown publicly so riders can read the original threads)
 - "Mark checked" with a last-checked date, plus an overview of what's ending soon or hasn't been checked in 30 days
 - Changes show on the public site immediately
+- **Offer pages:** add each brand's Canadian offers page. The site checks them every morning (Vercel Cron, `vercel.json`) and flags any page whose offer text changed, showing the lines that were added or removed. Update your deals, then click **Mark reviewed**. A page that blocks automated visits, loads its offers with JavaScript, or has moved is flagged so you check it by hand.
 
 ### Setting it up on Vercel
 
@@ -52,6 +53,7 @@ A password-protected area for managing **known issues** and **deals** without to
 2. **Database:** Project → Storage → Create Database → **Neon (Postgres)** → free plan → connect to this project. This adds `DATABASE_URL` and `DATABASE_URL_UNPOOLED`.
 3. **Redeploy.** The build creates the tables automatically.
 4. Visit `/admin`, log in, and click **Load starter content** to copy the current sample issues and deals into the database.
+5. Optional: add `CRON_SECRET` (any long random text) so only Vercel's scheduler can trigger the daily offer-page check. Without it, the check only accepts Vercel's scheduler and skips pages checked in the last 6 hours.
 
 Until a database is connected, the public site runs on the bundled sample data and the admin shows these steps.
 

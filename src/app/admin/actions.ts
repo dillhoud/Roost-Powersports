@@ -3,11 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { CATALOG, CATEGORIES } from "@/data/catalog";
-import { PROMO_TYPES } from "@/data/promos";
+import { BRAND_SITES, PROMO_TYPES } from "@/data/promos";
 import { checkPassword, endSession, requireAdmin, startSession } from "@/lib/auth";
 import { fromKind, fromPromoType } from "@/lib/content";
 import { hasDb, prisma } from "@/lib/db";
 import { loadStarterContent } from "@/lib/starter";
+import { checkAllSources, checkSource } from "@/lib/watch";
 
 // ── helpers ──────────────────────────────────────────────
 
@@ -170,4 +171,65 @@ export async function quickPromo(fd: FormData) {
   if (op === "unpublish") await prisma.promo.update({ where: { id }, data: { published: false } });
   refreshPublicPages();
   redirect(safeBack(fd, "/admin/deals"));
+}
+
+// ── offer pages ──────────────────────────────────────────
+
+export async function saveSource(fd: FormData) {
+  await guard();
+  const id = str(fd, "id");
+  const back = id ? `/admin/sources/${id}` : "/admin/sources";
+  const make = str(fd, "make");
+  const url = str(fd, "url");
+  if (!make) fail(back, "Pick a brand");
+  if (!/^https?:\/\/\S+$/i.test(url)) fail(back, "Enter the full link, starting with https://");
+  const data = { make, url, label: str(fd, "label"), active: id ? fd.get("active") === "on" : true };
+  if (id) {
+    const old = await prisma.offerSource.findUnique({ where: { id } });
+    // A new link starts fresh, so the first check becomes the new starting point.
+    const reset = old && old.url !== url ? { hash: null, text: null, previousText: null, status: "new" as const, needsReview: false, error: null } : {};
+    await prisma.offerSource.update({ where: { id }, data: { ...data, ...reset } });
+  } else {
+    const created = await prisma.offerSource.create({ data });
+    await checkSource(prisma, created);
+    redirect("/admin/sources?added=1");
+  }
+  redirect("/admin/sources?updated=1");
+}
+
+export async function deleteSource(fd: FormData) {
+  await guard();
+  await prisma.offerSource.delete({ where: { id: str(fd, "id") } });
+  redirect("/admin/sources?deleted=1");
+}
+
+export async function checkSourceNow(fd: FormData) {
+  await guard();
+  const s = await prisma.offerSource.findUnique({ where: { id: str(fd, "id") } });
+  if (s) await checkSource(prisma, s);
+  redirect(safeBack(fd, "/admin/sources"));
+}
+
+export async function checkAllNow() {
+  await guard();
+  await checkAllSources(prisma);
+  redirect("/admin/sources?checked=1");
+}
+
+export async function reviewSource(fd: FormData) {
+  await guard();
+  await prisma.offerSource.update({ where: { id: str(fd, "id") }, data: { needsReview: false, status: "ok", reviewedAt: new Date() } });
+  redirect(safeBack(fd, "/admin/sources"));
+}
+
+/** Adds each brand's Canadian site as a starting point, to be swapped for its offers page. */
+export async function addBrandSources() {
+  await guard();
+  const existing = new Set((await prisma.offerSource.findMany({ select: { make: true } })).map((s) => s.make));
+  const data = Object.entries(BRAND_SITES)
+    .filter(([make]) => !existing.has(make))
+    .map(([make, url]) => ({ make, url, label: "Brand home page: replace with the offers page" }));
+  if (data.length) await prisma.offerSource.createMany({ data });
+  await checkAllSources(prisma);
+  redirect("/admin/sources?checked=1");
 }
