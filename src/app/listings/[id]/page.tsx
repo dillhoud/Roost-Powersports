@@ -8,6 +8,7 @@ import { bestPromoRate } from "@/lib/finance";
 import { CATEGORIES } from "@/data/catalog";
 import { PaymentCalculator } from "@/components/PaymentCalculator";
 import { compareHref, rivals } from "@/lib/compare";
+import { CompareToggle } from "@/components/CompareTray";
 import { scoreFor } from "@/lib/reviews";
 import { num, cad } from "@/lib/format";
 import { DealBadge, DealMeter } from "@/components/DealBadge";
@@ -86,7 +87,8 @@ export default async function ListingPage({ params }: Props) {
           <div className="card p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-lg font-bold">Known issues for the {m.make} {m.model}</h2>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap items-center gap-4">
+                <CompareToggle slug={m.slug} name={`${m.make} ${m.model}`} />
                 <Link href={compareHref([m.slug, ...rivals(m).map((r) => r.slug)])} className="text-sm font-semibold text-brand-400 hover:underline">Compare with rivals →</Link>
                 <Link href={`/research/${m.slug}#issues`} className="text-sm font-semibold text-brand-400 hover:underline">Full model report →</Link>
               </div>

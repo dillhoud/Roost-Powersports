@@ -9,6 +9,7 @@ import { filterReviews, scoreFor, SUB_LABELS, SUB_RATINGS } from "@/lib/reviews"
 import { first, cad, withParams } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
 import { compareHref, rivals } from "@/lib/compare";
+import { CompareToggle } from "@/components/CompareTray";
 import { IssueCard } from "@/components/IssueCard";
 import { ReviewCard } from "@/components/ReviewCard";
 import { ReviewFilterPanel, ReviewSort, parseReviewFilters } from "@/components/ReviewFilterPanel";
@@ -68,6 +69,7 @@ export default async function ModelPage({ params, searchParams }: Props) {
             <Link href={`/listings?model=${slug}`} className="btn-primary">See {market.count} for sale</Link>
             <Link href={compareHref([slug, ...rivals(m).map((r) => r.slug)])} className="btn-ghost">Compare with rivals</Link>
             <a href="#issues" className="btn-ghost">Known issues ({issues.length})</a>
+            <CompareToggle slug={slug} name={`${m.make} ${m.model}`} className="rounded-sm border border-carbon-600 px-4 py-2.5 uppercase tracking-wider" />
             <a href="#reviews" className="btn-ghost">Reviews</a>
           </div>
         </div>
