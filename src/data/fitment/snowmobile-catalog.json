@@ -1,0 +1,147 @@
+{
+  "version": "2026.11-seed.1",
+  "market": "CA",
+  "note": "SEED DATA FOR DEVELOPMENT. Model names, packages and equipment were assembled from general knowledge and have NOT been checked against the manufacturers' year-specific Canadian catalogs. Every record is marked seed_unverified so the site never claims a configuration is factory-correct. Verify and correct before real dealers rely on it.",
+  "manufacturers": [
+    { "key": "arctic_cat", "label": "Arctic Cat" },
+    { "key": "polaris", "label": "Polaris" },
+    { "key": "ski_doo", "label": "Ski-Doo" },
+    { "key": "yamaha", "label": "Yamaha" },
+    { "key": "lynx", "label": "Lynx" }
+  ],
+  "features": [
+    {
+      "key": "gauge_display",
+      "label": "Gauge / display",
+      "help": "The display that came with the machine. If it was swapped later, choose Aftermarket display.",
+      "aftermarketChoice": "Aftermarket display",
+      "values": [
+        { "value": "analog_gauge", "label": "Analog gauge" },
+        { "value": "basic_lcd", "label": "Basic LCD gauge" },
+        { "value": "digital_color_display", "label": "Digital colour display" },
+        { "value": "mid_size_color_display", "label": "Mid-size colour display" },
+        { "value": "large_color_display", "label": "Large colour display" },
+        { "value": "large_touchscreen_display", "label": "Large touchscreen / GPS display" },
+        { "value": "gps_navigation_display", "label": "GPS navigation display" }
+      ]
+    },
+    {
+      "key": "lug_height",
+      "label": "Track lug height",
+      "aftermarketChoice": "Replacement track",
+      "values": [
+        { "value": "lug_2_5", "label": "2.5 in" },
+        { "value": "lug_2_75", "label": "2.75 in" },
+        { "value": "lug_3_0", "label": "3.0 in" },
+        { "value": "lug_3_25", "label": "3.25 in" }
+      ]
+    },
+    {
+      "key": "starter",
+      "label": "Starter",
+      "values": [
+        { "value": "electric_start", "label": "Electric start" },
+        { "value": "recoil", "label": "Recoil (pull start) only" }
+      ]
+    },
+    {
+      "key": "reverse",
+      "label": "Reverse",
+      "values": [
+        { "value": "electronic_reverse", "label": "Electronic reverse" },
+        { "value": "no_reverse", "label": "No reverse" }
+      ]
+    },
+    {
+      "key": "shock_package",
+      "label": "Shock package",
+      "aftermarketChoice": "Aftermarket shocks / revalved",
+      "values": [
+        { "value": "standard_shocks", "label": "Standard gas shocks" },
+        { "value": "kyb_pro", "label": "KYB Pro shocks" },
+        { "value": "walker_evans", "label": "Walker Evans shocks" },
+        { "value": "fox_qs3", "label": "FOX QS3 shocks" },
+        { "value": "fox_float", "label": "FOX FLOAT shocks" }
+      ]
+    },
+    {
+      "key": "windshield",
+      "label": "Windshield",
+      "values": [
+        { "value": "low_windshield", "label": "Low windshield" },
+        { "value": "mid_windshield", "label": "Mid windshield" },
+        { "value": "no_windshield", "label": "Wind deflector only" }
+      ]
+    }
+  ],
+  "trims": [
+    { "id": "sd-summit-x-850", "manufacturer": "ski_doo", "family": "summit", "familyLabel": "Summit", "trim": "summit_x_850", "trimLabel": "Summit X 850 E-TEC", "years": [2023, 2024], "engine": "850 E-TEC two-stroke", "packages": [{ "key": "154", "label": "154 in track" }, { "key": "165", "label": "165 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "sd-summit-x-turbo-r", "manufacturer": "ski_doo", "family": "summit", "familyLabel": "Summit", "trim": "summit_x_850_turbo_r", "trimLabel": "Summit X 850 E-TEC Turbo R", "years": [2023, 2024], "engine": "850 E-TEC Turbo R two-stroke", "packages": [{ "key": "154", "label": "154 in track" }, { "key": "165", "label": "165 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "sd-summit-x-expert", "manufacturer": "ski_doo", "family": "summit", "familyLabel": "Summit", "trim": "summit_x_expert_850", "trimLabel": "Summit X with Expert Package 850 E-TEC", "years": [2023, 2024], "engine": "850 E-TEC two-stroke", "packages": [{ "key": "154", "label": "154 in track" }, { "key": "165", "label": "165 in track" }, { "key": "175", "label": "175 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "sd-summit-sp-600r", "manufacturer": "ski_doo", "family": "summit", "familyLabel": "Summit", "trim": "summit_sp_600r", "trimLabel": "Summit SP 600R E-TEC", "years": [2023, 2024], "engine": "600R E-TEC two-stroke", "packages": [{ "key": "146", "label": "146 in track" }, { "key": "154", "label": "154 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+
+    { "id": "pol-rmk-khaos-850", "manufacturer": "polaris", "family": "rmk", "familyLabel": "RMK", "trim": "rmk_khaos_850", "trimLabel": "850 RMK Khaos", "years": [2023, 2024], "engine": "850 Patriot two-stroke", "packages": [{ "key": "146", "label": "146 in track" }, { "key": "155", "label": "155 in track" }, { "key": "165", "label": "165 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-khaos-9r", "manufacturer": "polaris", "family": "rmk", "familyLabel": "RMK", "trim": "rmk_khaos_9r", "trimLabel": "9R RMK Khaos", "years": [2023, 2024], "engine": "9R two-stroke", "packages": [{ "key": "155", "label": "155 in track" }, { "key": "165", "label": "165 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-khaos-boost", "manufacturer": "polaris", "family": "rmk", "familyLabel": "RMK", "trim": "rmk_khaos_boost", "trimLabel": "Patriot Boost RMK Khaos", "years": [2023, 2024], "engine": "850 Patriot Boost turbo two-stroke", "packages": [{ "key": "155", "label": "155 in track" }, { "key": "165", "label": "165 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-sp-650", "manufacturer": "polaris", "family": "rmk", "familyLabel": "RMK", "trim": "rmk_sp_650", "trimLabel": "650 RMK SP", "years": [2023, 2024], "engine": "650 Patriot two-stroke", "packages": [{ "key": "146", "label": "146 in track" }, { "key": "155", "label": "155 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+
+    { "id": "ac-m8000-mountain-cat", "manufacturer": "arctic_cat", "family": "mountain_cat", "familyLabel": "Mountain Cat", "trim": "m8000_mountain_cat_alpha", "trimLabel": "M 8000 Mountain Cat Alpha One", "years": [2023, 2024], "engine": "8000-series C-TEC2 two-stroke", "packages": [{ "key": "146", "label": "146 in track" }, { "key": "154", "label": "154 in track" }, { "key": "165", "label": "165 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-m8000-hardcore", "manufacturer": "arctic_cat", "family": "mountain_cat", "familyLabel": "Mountain Cat", "trim": "m8000_hardcore_alpha", "trimLabel": "M 8000 Hardcore Alpha One", "years": [2023], "engine": "8000-series C-TEC2 two-stroke", "packages": [{ "key": "154", "label": "154 in track" }, { "key": "165", "label": "165 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-riot-8000", "manufacturer": "arctic_cat", "family": "riot", "familyLabel": "Riot", "trim": "riot_8000", "trimLabel": "Riot 8000", "years": [2023, 2024], "engine": "8000-series C-TEC2 two-stroke", "packages": [{ "key": "146", "label": "146 in track" }], "market": ["CA", "US"], "source": "seed-2026-11", "status": "seed_unverified" }
+  ],
+  "rules": [
+    { "id": "sd-summit-gauge", "feature": "gauge_display", "when": { "manufacturer": ["ski_doo"], "family": ["summit"] }, "allow": [{ "value": "digital_color_display", "origin": "factory_standard" }, { "value": "large_touchscreen_display", "origin": "factory_option" }], "source": "seed-2026-11", "status": "seed_unverified", "note": "Summit X trims: digital colour display standard, large touchscreen optional." },
+    { "id": "sd-summit-sp-gauge", "feature": "gauge_display", "when": { "manufacturer": ["ski_doo"], "family": ["summit"], "trim": ["summit_sp_600r"] }, "allow": [{ "value": "basic_lcd", "origin": "factory_standard" }], "exclude": ["digital_color_display", "large_touchscreen_display"], "source": "seed-2026-11", "status": "seed_unverified", "note": "Exclusion example: the entry-level SP doesn't get the family's displays." },
+    { "id": "sd-summit-lug", "feature": "lug_height", "when": { "manufacturer": ["ski_doo"], "family": ["summit"] }, "allow": [{ "value": "lug_3_0", "origin": "factory_standard" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "sd-summit-146-lug", "feature": "lug_height", "when": { "manufacturer": ["ski_doo"], "family": ["summit"], "package": ["146"] }, "allow": [{ "value": "lug_2_5", "origin": "factory_standard" }], "exclude": ["lug_3_0"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "sd-summit-starter", "feature": "starter", "when": { "manufacturer": ["ski_doo"], "family": ["summit"] }, "allow": [{ "value": "recoil", "origin": "factory_standard" }, { "value": "electric_start", "origin": "factory_option" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "sd-summit-reverse", "feature": "reverse", "when": { "manufacturer": ["ski_doo"], "family": ["summit"] }, "allow": [{ "value": "electronic_reverse", "origin": "factory_standard" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "sd-summit-shocks", "feature": "shock_package", "when": { "manufacturer": ["ski_doo"], "family": ["summit"] }, "allow": [{ "value": "kyb_pro", "origin": "factory_standard" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "sd-summit-sp-shocks", "feature": "shock_package", "when": { "manufacturer": ["ski_doo"], "family": ["summit"], "trim": ["summit_sp_600r"] }, "allow": [{ "value": "standard_shocks", "origin": "factory_standard" }], "exclude": ["kyb_pro"], "source": "seed-2026-11", "status": "seed_unverified" },
+
+    { "id": "pol-rmk-gauge", "feature": "gauge_display", "when": { "manufacturer": ["polaris"], "family": ["rmk"] }, "allow": [{ "value": "digital_color_display", "origin": "factory_standard" }, { "value": "large_touchscreen_display", "origin": "factory_option" }], "source": "seed-2026-11", "status": "seed_unverified", "note": "Khaos trims: touchscreen offered as a factory option." },
+    { "id": "pol-rmk-sp-gauge", "feature": "gauge_display", "when": { "manufacturer": ["polaris"], "family": ["rmk"], "trim": ["rmk_sp_650"] }, "allow": [{ "value": "basic_lcd", "origin": "factory_standard" }, { "value": "large_touchscreen_display", "origin": "dealer_accessory" }], "exclude": ["digital_color_display"], "source": "seed-2026-11", "status": "seed_unverified", "note": "On the SP the touchscreen is a dealer-installed accessory, not factory." },
+    { "id": "pol-rmk-lug", "feature": "lug_height", "when": { "manufacturer": ["polaris"], "family": ["rmk"] }, "allow": [{ "value": "lug_2_75", "origin": "factory_standard" }, { "value": "lug_3_0", "origin": "factory_option" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-146-lug", "feature": "lug_height", "when": { "manufacturer": ["polaris"], "family": ["rmk"], "package": ["146"] }, "allow": [{ "value": "lug_2_5", "origin": "factory_standard" }], "exclude": ["lug_2_75", "lug_3_0"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-starter", "feature": "starter", "when": { "manufacturer": ["polaris"], "family": ["rmk"] }, "allow": [{ "value": "recoil", "origin": "factory_standard" }, { "value": "electric_start", "origin": "factory_option" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-boost-starter", "feature": "starter", "when": { "manufacturer": ["polaris"], "family": ["rmk"], "trim": ["rmk_khaos_boost"] }, "allow": [{ "value": "electric_start", "origin": "factory_standard" }], "exclude": ["recoil"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-reverse", "feature": "reverse", "when": { "manufacturer": ["polaris"], "family": ["rmk"] }, "allow": [{ "value": "electronic_reverse", "origin": "factory_standard" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-shocks", "feature": "shock_package", "when": { "manufacturer": ["polaris"], "family": ["rmk"] }, "allow": [{ "value": "walker_evans", "origin": "factory_standard" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "pol-rmk-sp-shocks", "feature": "shock_package", "when": { "manufacturer": ["polaris"], "family": ["rmk"], "trim": ["rmk_sp_650"] }, "allow": [{ "value": "standard_shocks", "origin": "factory_standard" }], "exclude": ["walker_evans"], "source": "seed-2026-11", "status": "seed_unverified" },
+
+    { "id": "ac-mountain-gauge", "feature": "gauge_display", "when": { "manufacturer": ["arctic_cat"], "family": ["mountain_cat"] }, "allow": [{ "value": "basic_lcd", "origin": "factory_standard" }, { "value": "large_color_display", "origin": "factory_option" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-hardcore-gauge", "feature": "gauge_display", "when": { "manufacturer": ["arctic_cat"], "family": ["mountain_cat"], "trim": ["m8000_hardcore_alpha"] }, "exclude": ["large_color_display"], "source": "seed-2026-11", "status": "seed_unverified", "note": "Exclusion example: the stripped-down Hardcore doesn't offer the large display." },
+    { "id": "ac-riot-gauge", "feature": "gauge_display", "when": { "manufacturer": ["arctic_cat"], "family": ["riot"] }, "allow": [{ "value": "basic_lcd", "origin": "factory_standard" }, { "value": "large_color_display", "origin": "dealer_accessory" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-lug", "feature": "lug_height", "when": { "manufacturer": ["arctic_cat"], "family": ["mountain_cat"] }, "allow": [{ "value": "lug_3_0", "origin": "factory_standard" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-146-lug", "feature": "lug_height", "when": { "manufacturer": ["arctic_cat"], "package": ["146"] }, "allow": [{ "value": "lug_2_5", "origin": "factory_standard" }], "exclude": ["lug_3_0"], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-starter", "feature": "starter", "when": { "manufacturer": ["arctic_cat"] }, "allow": [{ "value": "recoil", "origin": "factory_standard" }, { "value": "electric_start", "origin": "factory_option" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-reverse", "feature": "reverse", "when": { "manufacturer": ["arctic_cat"] }, "allow": [{ "value": "electronic_reverse", "origin": "factory_option" }, { "value": "no_reverse", "origin": "factory_standard" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-shocks", "feature": "shock_package", "when": { "manufacturer": ["arctic_cat"] }, "allow": [{ "value": "fox_qs3", "origin": "factory_standard" }], "source": "seed-2026-11", "status": "seed_unverified" },
+    { "id": "ac-hardcore-shocks", "feature": "shock_package", "when": { "manufacturer": ["arctic_cat"], "trim": ["m8000_hardcore_alpha"] }, "allow": [{ "value": "fox_float", "origin": "factory_standard" }], "exclude": ["fox_qs3"], "source": "seed-2026-11", "status": "seed_unverified" },
+
+    { "id": "all-windshield", "feature": "windshield", "when": { "yearRange": [2023, 2024] }, "allow": [{ "value": "no_windshield", "origin": "factory_standard" }, { "value": "low_windshield", "origin": "dealer_accessory" }, { "value": "mid_windshield", "origin": "dealer_accessory" }], "source": "seed-2026-11", "status": "seed_unverified" }
+  ],
+  "aftermarket": [
+    { "value": "exhaust", "label": "Aftermarket exhaust" },
+    { "value": "ecu_tune", "label": "ECU tune" },
+    { "value": "clutch_kit", "label": "Clutch kit" },
+    { "value": "turbo_kit", "label": "Turbo kit" },
+    { "value": "skis", "label": "Aftermarket skis" },
+    { "value": "track", "label": "Track replacement" },
+    { "value": "suspension_revalve", "label": "Suspension revalve" },
+    { "value": "tunnel_reinforcement", "label": "Tunnel reinforcement" },
+    { "value": "wrap", "label": "Wrap / graphics" },
+    { "value": "handlebar", "label": "Handlebar / riser changes" },
+    { "value": "ice_scratchers", "label": "Ice scratchers" },
+    { "value": "tunnel_bag", "label": "Tunnel bag" },
+    { "value": "skid_plate", "label": "Skid plate" },
+    { "value": "bumper", "label": "Bumper" },
+    { "value": "winch", "label": "Winch" },
+    { "value": "gps", "label": "GPS" },
+    { "value": "audio", "label": "Audio system" },
+    { "value": "other", "label": "Other (describe)" }
+  ],
+  "sources": [
+    { "id": "seed-2026-11", "label": "Development seed data (November 2026)", "status": "seed_unverified", "note": "Not checked against manufacturer catalogs. Replace with verified year-specific Canadian catalog data." }
+  ]
+}

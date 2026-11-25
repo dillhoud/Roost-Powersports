@@ -67,6 +67,22 @@ npm run db:seed           # optional: load starter content
 npm run dev
 ```
 
+## Snowmobile listing form (`/admin/listings/new`)
+
+A fitment-aware form for dealers to list a snowmobile. It narrows step by step: year → manufacturer → model family → exact model/trim → package → factory equipment → aftermarket modifications → condition, history and price. Each step only offers what was sold for the choices before it.
+
+- **Catalog as data:** `src/data/fitment/snowmobile-catalog.json` (versioned) holds trims, packages, features and fitment rules. Rules can target years, a year range, manufacturer, family, trim, package and market. A more specific **exclusion** beats a broader allow rule.
+- **Rules engine:** `src/lib/fitment/engine.ts` is shared by the form, the options API (`GET /api/snowmobiles/fitment/options?year=&manufacturer=&family=&trim=&package=`) and server-side validation, so all three agree.
+- **Where equipment came from:** factory standard, factory option, factory package, dealer-installed accessory, aftermarket or unknown. Fields like the gauge/display offer an "Aftermarket display" choice, so a later swap is never recorded as factory.
+- **"I don't know"** is allowed for trim, package and every equipment item. The listing is then marked unverified rather than forced to guess.
+- **Verification:** a listing only shows "Catalog verified" when every fact comes from a trusted source. Listings store the catalog version they were checked against.
+- **Server checks** the whole configuration again on save, and rejects impossible combinations with a clear message.
+- **Tests:** `npm test` runs the engine tests (`src/lib/fitment/engine.test.ts`).
+
+**The seed catalog (Ski-Doo Summit, Polaris RMK, Arctic Cat Mountain Cat/Riot, 2023–2024) is development data marked `seed_unverified`.** Check it against the manufacturers' year-specific Canadian catalogs before dealers rely on it.
+
+Still to build: an admin catalog editor (CSV/JSON import, versions and rollback, a form preview for any configuration), VIN prefill, other machine types, and showing these listings on the public site.
+
 ## Data — important
 
 This is a **working prototype on sample data**:

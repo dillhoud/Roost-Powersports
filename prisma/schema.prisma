@@ -108,3 +108,55 @@ model OfferSource {
 
   @@index([make])
 }
+
+enum ListingStatus {
+  active
+  pending
+  sold
+  expired
+}
+
+enum Verification {
+  verified
+  partially_verified
+  unverified
+}
+
+/// A dealer's snowmobile listing built with the fitment configurator.
+model SnowmobileListing {
+  id             String        @id @default(cuid())
+  /// Catalog version the configuration was checked against, so later catalog edits don't rewrite it
+  catalogVersion String
+  year           Int
+  manufacturer   String
+  family         String?
+  trim           String?
+  package        String?
+  title          String
+  verification   Verification  @default(unverified)
+  /// Engine, package label, trim source and status
+  identity       Json
+  /// Factory equipment: [{ feature, value, origin, catalog_status, source_reference }]
+  equipment      Json
+  /// Aftermarket modifications: [{ key, label, note, origin, catalog_status }]
+  aftermarket    Json
+  vin            String?
+  price          Int
+  priceType      String        @default("negotiable")
+  km             Int
+  grade          String
+  titleStatus    String        @default("Clean")
+  owners         Int           @default(1)
+  serviceRecords String        @default("none")
+  colour         String        @default("")
+  financing      Boolean       @default(false)
+  delivery       Boolean       @default(false)
+  dealer         String
+  postalCode     String
+  notes          String        @default("")
+  status         ListingStatus @default(active)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status])
+}
