@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CATALOG, CATEGORIES, categoryLabel, getModel, type VehicleModel } from "@/data/catalog";
 import { getIssues } from "@/lib/content";
-import { CURRENT_YEAR, allListings, estimateMarketValue, expectedUsagePerYear, rateDeal, usageUnit } from "@/lib/listings";
+import { CURRENT_YEAR, liveListings, estimateMarketValue, expectedUsagePerYear, rateDeal, usageUnit } from "@/lib/listings";
 import { first, num, cad } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
 import { DealBadge, DealMeter } from "@/components/DealBadge";
@@ -96,7 +96,7 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
     return { label: f < 1 ? "Low use" : f > 1 ? "High use" : "Typical", usage: u, value: estimateMarketValue(m, year, u, "used") };
   });
 
-  const comps = allListings()
+  const comps = liveListings()
     .filter((l) => l.modelSlug === m.slug && l.condition === "used" && Math.abs(l.year - year) <= 2)
     .sort((a, b) => Math.abs(a.year - year) - Math.abs(b.year - year) || Math.abs(a.usage - usage) - Math.abs(b.usage - usage));
   const compAvg = comps.length ? Math.round(comps.reduce((s, l) => s + l.price, 0) / comps.length) : 0;

@@ -7,16 +7,17 @@ import { cad } from "@/lib/format";
 interface Props {
   price: number;
   condition: "new" | "used";
-  sellerType: "dealer" | "private";
+  /** Whether the dealer offers financing. */
+  financing: boolean;
   /** Two-letter province or territory code, for the default sales tax. */
   province: string;
   promo?: PromoRate;
 }
 
-export function PaymentCalculator({ price, condition, sellerType, province, promo }: Props) {
+export function PaymentCalculator({ price, condition, financing, province, promo }: Props) {
   const id = useId();
-  const promoEligible = !!promo && condition === "new" && sellerType === "dealer";
-  const defaultFees = sellerType === "private" ? 0 : condition === "new" ? 1500 : 400;
+  const promoEligible = !!promo && condition === "new" && financing;
+  const defaultFees = condition === "new" ? 1500 : 400;
   const tax = salesTaxFor(province);
 
   const [down, setDown] = useState(Math.round((price * DEFAULT_DOWN_PCT) / 100) * 100);
@@ -67,7 +68,8 @@ export function PaymentCalculator({ price, condition, sellerType, province, prom
       )}
       {!promoEligible && promo && (
         <p className="mt-3 text-xs text-zinc-500">
-          {promo.make} has {promo.apr}% promo financing, but factory rates usually apply only to new units bought from a dealer.
+          {promo.make} has {promo.apr}% promo financing,{" "}
+          {condition === "new" ? "but it's arranged through the dealer and this one doesn't list financing." : "but factory rates usually apply only to new units."}
         </p>
       )}
 
@@ -106,7 +108,7 @@ export function PaymentCalculator({ price, condition, sellerType, province, prom
             <input id={`${id}-tax`} type="number" min={0} max={15} step={0.25} value={taxPct} onChange={(e) => setTaxPct(Number(e.target.value) || 0)} className="field" />
           </div>
           <div>
-            <label className="label" htmlFor={`${id}-fees`}>{sellerType === "dealer" ? (condition === "new" ? "Freight, PDI & fees" : "Dealer fees") : "Fees"}</label>
+            <label className="label" htmlFor={`${id}-fees`}>{condition === "new" ? "Freight, PDI & fees" : "Dealer fees"}</label>
             <input id={`${id}-fees`} type="number" min={0} step={50} value={fees} onChange={(e) => setFees(Number(e.target.value) || 0)} className="field" />
           </div>
         </div>
@@ -124,8 +126,8 @@ export function PaymentCalculator({ price, condition, sellerType, province, prom
         {promoSavings > 0 && <Row k="Saved vs. standard rate" v={cad(Math.round(promoSavings))} accent />}
       </dl>
       <p className="mt-3 text-xs leading-relaxed text-zinc-600">
-        {sellerType === "dealer" && condition === "new" && "New units usually carry freight and PDI charges, so ask for an all-in price. "}
-        {sellerType === "private" && "Private sales are taxed differently in each province, often when you register. Check your province's rules. "}
+        {condition === "new" && "New units usually carry freight and PDI charges, so ask for an all-in price. "}
+        {!financing && "This dealer doesn't list in-house financing, so this is what a bank or credit union loan might cost. "}
         Rates are typical ranges for powersports loans, not an offer of credit.
       </p>
     </div>

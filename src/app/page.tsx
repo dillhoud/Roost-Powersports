@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CATALOG, CATEGORIES, MAKES, getModel, type Category } from "@/data/catalog";
 import { promoTypeLabel } from "@/data/promos";
 import { getIssues, getPromos } from "@/lib/content";
-import { allListings, CITIES, DEAL_RATINGS, type Listing } from "@/lib/listings";
+import { liveListings, CITIES, DEAL_RATINGS, type Listing } from "@/lib/listings";
 import { scoreFor } from "@/lib/reviews";
 import { daysUntil, num, shortDate, cad } from "@/lib/format";
 
@@ -14,7 +14,7 @@ export const revalidate = 300;
 
 export default async function Home() {
   const [ISSUES, PROMOS] = await Promise.all([getIssues(), getPromos()]);
-  const listings = allListings();
+  const listings = liveListings();
   const cleanUsed = listings.filter((l) => l.condition === "used" && l.titleStatus === "Clean");
   const bySavingsPct = [...cleanUsed].sort((a, b) => b.savings / b.marketValue - a.savings / a.marketValue);
   const featured = bySavingsPct[0];
@@ -303,7 +303,7 @@ function DealCard({ l }: { l: Listing }) {
       <div className="mt-4 font-semibold leading-snug text-white group-hover:text-brand-400">
         {l.year} {l.model.make} {l.model.model}
       </div>
-      <div className="mt-1 text-xs text-zinc-500">{num(l.usage)} {l.usageUnit} · {l.sellerType === "dealer" ? "Dealer" : "Private"}</div>
+      <div className="mt-1 text-xs text-zinc-500">{num(l.usage)} {l.usageUnit} · {l.seller}</div>
       <div className="mt-auto pt-6">
         <div className="font-display text-3xl font-bold tabular-nums text-white">{cad(l.price)}</div>
         <div className="mt-1 text-xs text-zinc-500">
