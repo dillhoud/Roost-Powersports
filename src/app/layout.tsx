@@ -14,9 +14,9 @@ const barlow = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Roost — Powersports deals, reviews & known issues", template: "%s · Roost" },
+  title: { default: "Roost — Powersports deals, reviews & buyer's checklists", template: "%s · Roost" },
   description:
-    "Shop ATVs, side-by-sides, snowmobiles and motorcycles across Canada with deal ratings, owner reviews, common problems by model, and current brand discounts in one place.",
+    "Shop ATVs, side-by-sides, snowmobiles and motorcycles across Canada with deal ratings, owner reviews, a buyer's checklist for every model, and current brand discounts in one place.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

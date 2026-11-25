@@ -24,7 +24,7 @@ Roost covers Canada only:
 | `/compare` | **Side-by-side comparison** of up to 3 models: Canadian MSRP, estimated payment, owner ratings, reliability, serious known issues, value lost per year and after 3 years, horsepower, current offers and listings. The best in each row is highlighted, and the link can be shared. Tick **Compare** on up to 3 models (research cards, model pages, listings) and a bar at the bottom of the screen collects them, with a **Compare now** button. Picks are remembered in that browser. Also linked as "Compare with rivals" |
 | `/research/[slug]` | Full model report: sub-ratings, new/used prices, current offers, common problems, filterable reviews |
 | `/reviews` | All owner reviews. Filter by riding style (mud, dunes, trail, mountain…), rider experience, model year, minimum stars, verified owners, and "only reviews that mention problems". You can also sort by what matters most to you (e.g. best reliability first) |
-| `/issues` | Searchable common-problems database: symptoms, usual fix, typical cost, how much it's discussed, sources, recalls vs. bulletins vs. owner reports. Filter by model year |
+| `/issues` | **Buyer's checklist** (named "Known issues" before): a searchable database of what to check on each model: symptoms, usual fix, typical cost, how much it's discussed, sources, recalls vs. bulletins vs. owner reports. Filter by model year |
 | `/deals` | Rebates, promo APR, and pro/industry, military, first-responder, farm & ag, loyalty and racer programs, filtered by "I am…" |
 
 Filters apply instantly as you change them, the URLs can be shared, and everything still works with JavaScript turned off.

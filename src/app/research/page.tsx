@@ -49,7 +49,7 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-4xl font-bold uppercase italic tracking-tight text-white">Research &amp; compare</h1>
-          <p className="mt-1 text-zinc-500">Owner ratings, known issues and real market prices for every model. Tick <b className="text-zinc-300">Compare</b> on up to 3 to see them side by side.</p>
+          <p className="mt-1 text-zinc-500">Owner ratings, a buyer&apos;s checklist and real market prices for every model. Tick <b className="text-zinc-300">Compare</b> on up to 3 to see them side by side.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link href="/compare" className="btn-primary">Compare side by side</Link>
@@ -114,7 +114,7 @@ export default async function ResearchPage({ searchParams }: { searchParams: Pro
               <dl className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
                 <div className="rounded-sm bg-carbon-850 p-2"><dt className="text-zinc-500">Reliability</dt><dd className="text-base font-bold">{s.sub.reliability.toFixed(1)}</dd></div>
                 <div className="rounded-sm bg-carbon-850 p-2"><dt className="text-zinc-500">Value</dt><dd className="text-base font-bold">{s.sub.value.toFixed(1)}</dd></div>
-                <div className={`rounded-sm p-2 ${majors ? "bg-red-500/10" : "bg-carbon-850"}`}><dt className="text-zinc-500">Known issues</dt><dd className="text-base font-bold">{issueCount}{majors ? <span className="text-red-400"> ({majors}!)</span> : ""}</dd></div>
+                <div className={`rounded-sm p-2 ${majors ? "bg-red-500/10" : "bg-carbon-850"}`}><dt className="text-zinc-500">To check</dt><dd className="text-base font-bold">{issueCount}{majors ? <span className="text-red-400"> ({majors}!)</span> : ""}</dd></div>
               </dl>
               <div className="mt-auto flex justify-between pt-3 text-sm">
                 <span className="text-zinc-500">New from <b className="text-zinc-100">{cad(m.msrp)}</b></span>

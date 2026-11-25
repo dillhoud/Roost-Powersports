@@ -6,7 +6,10 @@ import { first } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
 import { IssueCard } from "@/components/IssueCard";
 
-export const metadata: Metadata = { title: "Common problems by make & model" };
+export const metadata: Metadata = {
+  title: "Buyer's checklist: what to check by make & model",
+  description: "What to check before you buy an ATV, side-by-side, snowmobile or motorcycle: common problems owners report, recalls, the usual fix and what it costs.",
+};
 type SP = Record<string, string | string[] | undefined>;
 
 export default async function IssuesPage({ searchParams }: { searchParams: Promise<SP> }) {
@@ -42,10 +45,10 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="font-display text-4xl font-bold uppercase italic tracking-tight text-white">Common problems by make &amp; model</h1>
+      <h1 className="font-display text-4xl font-bold uppercase italic tracking-tight text-white">Buyer&apos;s checklist</h1>
       <p className="mt-1 max-w-3xl text-zinc-500">
-        The issues riders keep talking about on Reddit and model-specific forums, plus recalls and service bulletins —
-        with symptoms, the usual fix and what it costs. Know what to check before you buy.
+        What to check on each make and model before you buy: the things riders talk about most on Reddit and model forums,
+        plus recalls and service bulletins. What to look for, the usual fix and what it costs.
       </p>
 
       <AutoSubmitForm className="card mt-6 grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">

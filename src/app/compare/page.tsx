@@ -17,7 +17,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const ms = parseCompare(all((await searchParams).m));
   return {
     title: ms.length > 1 ? ms.map((m) => m.model).join(" vs ") : "Compare models",
-    description: "Compare ATVs, side-by-sides, snowmobiles and motorcycles side by side: Canadian prices, owner ratings, reliability, known issues and resale value.",
+    description: "Compare ATVs, side-by-sides, snowmobiles and motorcycles side by side: Canadian prices, owner ratings, reliability, a buyer's checklist and resale value.",
   };
 }
 
@@ -67,14 +67,14 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
         { label: "Would recommend", cells: data.map((d) => `${d.s.recommendPct}%`), score: data.map((d) => d.s.recommendPct), better: "high" },
         ...SUB_RATINGS.map((k): Row => ({ label: SUB_LABELS[k], cells: data.map((d) => d.s.sub[k].toFixed(1)), score: data.map((d) => Math.round(d.s.sub[k] * 10)), better: "high" })),
         {
-          label: "Serious known issues",
+          label: "Serious checklist items",
           hint: "Major problems and recalls",
           cells: data.map((d) => (d.serious.length ? `${d.serious.length} of ${d.issues.length}` : `None of ${d.issues.length}`)),
           score: data.map((d) => d.serious.length),
           better: "low",
         },
         {
-          label: "Most-reported problems",
+          label: "Top things to check",
           cells: data.map((d) =>
             d.issues.length ? (
               <ul key="i" className="space-y-1">{d.issues.slice(0, 3).map((i) => <li key={i.id} className={i.severity === "major" ? "text-red-300" : ""}>• {i.title}</li>)}</ul>

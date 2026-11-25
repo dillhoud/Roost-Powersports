@@ -169,13 +169,13 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
           <h2 className="font-bold">What buyers will ask about</h2>
           {issues.length ? (
             <>
-              <p className="mt-1 text-zinc-500">{issues.length} known issue{issues.length > 1 ? "s" : ""} for {year}{majors.length ? `, ${majors.length} serious` : ""}. Receipts showing they&apos;re fixed help you get the top of the range.</p>
+              <p className="mt-1 text-zinc-500">{issues.length} buyer&apos;s checklist item{issues.length > 1 ? "s" : ""} for {year}{majors.length ? `, ${majors.length} serious` : ""}. Receipts showing they&apos;re fixed help you get the top of the range.</p>
               <ul className="mt-3 space-y-1.5">
                 {issues.slice(0, 4).map((i) => <li key={i.id} className="text-zinc-300">• {i.title}</li>)}
               </ul>
             </>
           ) : (
-            <p className="mt-3 text-zinc-500">No known issues tracked for this year.</p>
+            <p className="mt-3 text-zinc-500">Nothing on the buyer&apos;s checklist for this year.</p>
           )}
           <Link href={`/research/${m.slug}#issues`} className="mt-4 inline-block font-semibold text-brand-400 hover:underline">Full model report →</Link>
         </section>

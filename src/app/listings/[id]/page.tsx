@@ -86,14 +86,14 @@ export default async function ListingPage({ params }: Props) {
 
           <div className="card p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-bold">Known issues for the {m.make} {m.model}</h2>
+              <h2 className="text-lg font-bold">Buyer&apos;s checklist for the {m.make} {m.model}</h2>
               <div className="flex flex-wrap items-center gap-4">
                 <CompareToggle slug={m.slug} name={`${m.make} ${m.model}`} />
                 <Link href={compareHref([m.slug, ...rivals(m).map((r) => r.slug)])} className="text-sm font-semibold text-brand-400 hover:underline">Compare with rivals →</Link>
                 <Link href={`/research/${m.slug}#issues`} className="text-sm font-semibold text-brand-400 hover:underline">Full model report →</Link>
               </div>
             </div>
-            <p className="mt-1 text-sm text-zinc-500">What owners report most — ask the seller about these before you buy.</p>
+            <p className="mt-1 text-sm text-zinc-500">What to look at, or ask the seller about. Receipts showing the work is done are a good sign.</p>
             <div className="mt-4 space-y-3">
               {issues.map((i) => <IssueCard key={i.id} issue={i} highlightYear={l.year} />)}
             </div>

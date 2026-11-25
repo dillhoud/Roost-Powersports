@@ -3,7 +3,7 @@ import { Wordmark } from "./Header";
 
 const COLS = [
   { title: "Shop", links: [["ATVs", "/listings?category=atv"], ["Side-by-sides", "/listings?category=sxs"], ["Snowmobiles", "/listings?category=snowmobile"], ["Motorcycles", "/listings?category=motorcycle"]] },
-  { title: "Research", links: [["Research models", "/research"], ["Compare side by side", "/compare"], ["Owner reviews", "/reviews"], ["Known issues", "/issues"], ["What's my machine worth?", "/value"]] },
+  { title: "Research", links: [["Research models", "/research"], ["Compare side by side", "/compare"], ["Owner reviews", "/reviews"], ["Buyer's checklist", "/issues"], ["What's my machine worth?", "/value"]] },
   { title: "Save", links: [["All offers", "/deals"], ["Military & first responder", "/deals?type=military&type=first-responder"], ["Pro & industry", "/deals?type=pro"], ["Farm & ag", "/deals?type=ag"]] },
 ];
 
@@ -28,7 +28,7 @@ export function Footer() {
       </div>
       <div className="border-t border-carbon-800">
         <p className="mx-auto max-w-7xl px-4 py-6 text-xs leading-relaxed text-zinc-600">
-          Preview build — Canada only. Listings, reviews and prices are sample data in CAD. Known-issue summaries reflect recurring owner discussion and
+          Preview build — Canada only. Listings, reviews and prices are sample data in CAD. Buyer&apos;s checklist entries reflect recurring owner discussion and
           are not a substitute for an inspection or a VIN recall check. Confirm offers and eligibility with the manufacturer or dealer.
         </p>
       </div>

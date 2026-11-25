@@ -86,7 +86,7 @@ export default async function Home() {
           {[
             [num(listings.length), "Machines for sale"],
             [num(underMarket), "Priced under market"],
-            [num(ISSUES.length), "Known issues tracked"],
+            [num(ISSUES.length), "Checklist items"],
             [num(PROMOS.length), "Factory offers live"],
           ].map(([n, label], i) => (
             <div key={label} className={`py-7 ${i % 2 ? "pl-6" : ""} ${i > 0 ? "md:border-l md:border-carbon-800 md:pl-8" : ""} ${i === 2 ? "max-md:pl-0" : ""}`}>
@@ -130,18 +130,18 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Known issues ─────────────────────────────────── */}
+      {/* ── Buyer's checklist ────────────────────────────── */}
       <section className="mx-auto mt-20 max-w-7xl px-4">
         <div className="grid gap-10 rounded-sm border border-carbon-800 bg-carbon-900 p-6 md:p-10 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <div className="eyebrow text-brand-400">03 — Know before you buy</div>
-            <h2 className="display mt-4 text-5xl md:text-6xl">What breaks.<br />What it costs.</h2>
+            <div className="eyebrow text-brand-400">03 — Buyer&apos;s checklist</div>
+            <h2 className="display mt-4 text-5xl md:text-6xl">Check it.<br />Then buy it.</h2>
             <p className="mt-5 max-w-sm leading-relaxed text-zinc-400">
-              The problems owners keep posting about on Reddit and model forums, plus recalls and service bulletins.
-              Symptoms, the usual fix, and the bill.
+              What owners say to look at on every model, from Reddit and model forums, plus recalls and service bulletins.
+              What to look for, the usual fix, and the cost.
             </p>
             <Link href="/issues" className="mt-8 inline-block rounded-sm border border-carbon-600 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:border-white">
-              Search all {ISSUES.length} issues
+              Open the buyer&apos;s checklist
             </Link>
           </div>
           <ol className="divide-y divide-carbon-800 border-y border-carbon-800">
