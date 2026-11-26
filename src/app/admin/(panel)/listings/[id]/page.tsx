@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { hasDb, prisma } from "@/lib/db";
 import { cad, num, shortDate } from "@/lib/format";
-import { snowmobileCatalog } from "@/lib/fitment/catalog";
+import { getCatalogByVersion } from "@/lib/fitment/store";
 import { VERIFIED, type EquipmentEntry } from "@/lib/fitment/types";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { deleteListing, setListingStatus } from "../../../listing-actions";
@@ -25,7 +25,8 @@ export default async function ListingDetail({ params, searchParams }: { params: 
   const equipment = l.equipment as unknown as EquipmentEntry[];
   const mods = l.aftermarket as unknown as { key: string; label: string; note?: string }[];
   const identity = l.identity as unknown as { engine?: string; package?: string };
-  const feature = (k: string) => snowmobileCatalog.features.find((f) => f.key === k);
+  const catalog = await getCatalogByVersion(l.catalogVersion);
+  const feature = (k: string) => catalog.features.find((f) => f.key === k);
   const valueLabel = (e: EquipmentEntry) => (e.value === "unknown" ? "Unknown" : feature(e.feature)?.values.find((v) => v.value === e.value)?.label ?? e.value);
   const badge =
     l.verification === "verified"

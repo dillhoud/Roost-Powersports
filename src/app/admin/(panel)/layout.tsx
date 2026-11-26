@@ -8,6 +8,7 @@ const NAV = [
   { href: "/admin/deals", label: "Deals" },
   { href: "/admin/sources", label: "Offer pages" },
   { href: "/admin/listings", label: "Listings" },
+  { href: "/admin/catalog", label: "Catalog" },
 ];
 
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {

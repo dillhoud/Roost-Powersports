@@ -81,7 +81,18 @@ A fitment-aware form for dealers to list a snowmobile. It narrows step by step: 
 
 **The seed catalog (Ski-Doo Summit, Polaris RMK, Arctic Cat Mountain Cat/Riot, 2023–2024) is development data marked `seed_unverified`.** Check it against the manufacturers' year-specific Canadian catalogs before dealers rely on it.
 
-Still to build: an admin catalog editor (CSV/JSON import, versions and rollback, a form preview for any configuration), VIN prefill, other machine types, and showing these listings on the public site.
+### Catalog editor (`/admin/catalog`)
+
+Correct the catalog without touching code:
+
+- **Draft, then publish.** Editing any model or rule starts a private draft. Dealers keep using the live version until you publish. Every published version is kept, and **Roll back to this** republishes an older one as a new version, so history stays in order. Saved listings keep the version they were checked against.
+- **Models & packages**: add or edit trims, the years they were sold, packages, engine, markets, source and confidence.
+- **Equipment rules**: add or edit rules with conditions, allowed values with their origin, exclusions, source and confidence. Each rule reads as a sentence and can be filtered by equipment and make.
+- **Import & JSON**: CSV import for models or rules (adds new ones, replaces matching ids), JSON merge or full replace, a raw JSON editor for adding equipment types and values, and JSON download of any version.
+- **Before publishing**: an integrity check (broken references, duplicates, bad values or years) blocks publishing until it's clean. **Listings affected** shows which saved listings would be offered different choices, or whose saved factory equipment would no longer be valid.
+- **Preview form**: try the dealer form against the draft or the live catalog, starting from any model, and see exactly how a configuration would be saved. Nothing is saved.
+
+Still to build: VIN prefill, other machine types, and showing these listings on the public site.
 
 ## Data — important
 

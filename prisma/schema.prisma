@@ -160,3 +160,24 @@ model SnowmobileListing {
 
   @@index([status])
 }
+
+enum CatalogStatus {
+  draft
+  published
+}
+
+/// A version of a fitment catalog (snowmobiles for now). The newest published one is live;
+/// there's at most one draft being edited. Old versions stay for history and rollback.
+model CatalogVersion {
+  id          String        @id @default(cuid())
+  kind        String        @default("snowmobile")
+  version     String
+  status      CatalogStatus @default(draft)
+  data        Json
+  note        String        @default("")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  publishedAt DateTime?
+
+  @@index([kind, status])
+}
