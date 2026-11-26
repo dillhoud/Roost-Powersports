@@ -5,7 +5,7 @@ export const NAV = [
   { href: "/listings", label: "Buy" },
   { href: "/research", label: "Research" },
   { href: "/reviews", label: "Reviews" },
-  { href: "/issues", label: "Known Issues" },
+  { href: "/issues", label: "Buyer's Checklist" },
   { href: "/deals", label: "Deals" },
   { href: "/value", label: "Value" },
 ];

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CATALOG, CATEGORIES, categoryLabel, getModel, type VehicleModel } from "@/data/catalog";
 import { getIssues } from "@/lib/content";
-import { CURRENT_YEAR, allListings, estimateMarketValue, expectedUsagePerYear, rateDeal, usageUnit } from "@/lib/listings";
+import { CURRENT_YEAR, liveListings, estimateMarketValue, expectedUsagePerYear, rateDeal, usageUnit } from "@/lib/listings";
 import { first, num, cad } from "@/lib/format";
 import { AutoSubmitForm } from "@/components/AutoSubmitForm";
 import { DealBadge, DealMeter } from "@/components/DealBadge";
@@ -96,7 +96,7 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
     return { label: f < 1 ? "Low use" : f > 1 ? "High use" : "Typical", usage: u, value: estimateMarketValue(m, year, u, "used") };
   });
 
-  const comps = allListings()
+  const comps = liveListings()
     .filter((l) => l.modelSlug === m.slug && l.condition === "used" && Math.abs(l.year - year) <= 2)
     .sort((a, b) => Math.abs(a.year - year) - Math.abs(b.year - year) || Math.abs(a.usage - usage) - Math.abs(b.usage - usage));
   const compAvg = comps.length ? Math.round(comps.reduce((s, l) => s + l.price, 0) / comps.length) : 0;
@@ -169,13 +169,13 @@ async function Result({ m, year, usage, typicalUsage, ask }: { m: VehicleModel; 
           <h2 className="font-bold">What buyers will ask about</h2>
           {issues.length ? (
             <>
-              <p className="mt-1 text-zinc-500">{issues.length} known issue{issues.length > 1 ? "s" : ""} for {year}{majors.length ? `, ${majors.length} serious` : ""}. Receipts showing they&apos;re fixed help you get the top of the range.</p>
+              <p className="mt-1 text-zinc-500">{issues.length} buyer&apos;s checklist item{issues.length > 1 ? "s" : ""} for {year}{majors.length ? `, ${majors.length} serious` : ""}. Receipts showing they&apos;re fixed help you get the top of the range.</p>
               <ul className="mt-3 space-y-1.5">
                 {issues.slice(0, 4).map((i) => <li key={i.id} className="text-zinc-300">• {i.title}</li>)}
               </ul>
             </>
           ) : (
-            <p className="mt-3 text-zinc-500">No known issues tracked for this year.</p>
+            <p className="mt-3 text-zinc-500">Nothing on the buyer&apos;s checklist for this year.</p>
           )}
           <Link href={`/research/${m.slug}#issues`} className="mt-4 inline-block font-semibold text-brand-400 hover:underline">Full model report →</Link>
         </section>

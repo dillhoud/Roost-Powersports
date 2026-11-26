@@ -3,14 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { promoTypeLabel } from "@/data/promos";
 import { getIssues, getPromos } from "@/lib/content";
-import { allListings, getListing, timeOnMarket } from "@/lib/listings";
+import { getListing, liveListings, timeOnMarket } from "@/lib/listings";
 import { bestPromoRate } from "@/lib/finance";
 import { CATEGORIES } from "@/data/catalog";
 import { PaymentCalculator } from "@/components/PaymentCalculator";
 import { compareHref, rivals } from "@/lib/compare";
 import { CompareToggle } from "@/components/CompareTray";
 import { scoreFor } from "@/lib/reviews";
-import { num, cad } from "@/lib/format";
+import { num, cad, shortDate } from "@/lib/format";
 import { DealBadge, DealMeter } from "@/components/DealBadge";
 import { VehicleArt } from "@/components/VehicleArt";
 import { Stars } from "@/components/Stars";
@@ -31,12 +31,13 @@ export default async function ListingPage({ params }: Props) {
   const issues = await getIssues(m.slug);
   const score = scoreFor(m.slug);
   const promos = (await getPromos(m.make)).filter((p) => p.categories.includes(m.category));
-  const similar = allListings()
+  const similar = liveListings()
     .filter((x) => x.modelSlug === m.slug && x.id !== l.id)
     .sort((a, b) => Math.abs(a.year - l.year) - Math.abs(b.year - l.year))
     .slice(0, 3);
   const pct = Math.round((Math.abs(l.savings) / l.marketValue) * 100);
   const tom = timeOnMarket(l);
+  const gone = l.status === "sold" || l.status === "expired";
   const plural = CATEGORIES.find((c) => c.id === m.category)!.plural;
   const peerPlural = plural === "ATVs" ? plural : plural.toLowerCase();
   const promoRate = bestPromoRate(promos, m.make, m.category);
@@ -60,14 +61,17 @@ export default async function ListingPage({ params }: Props) {
             <h2 className="text-lg font-bold">Overview</h2>
             <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-3">
               {[
-                ["Condition", l.condition === "new" ? "New" : "Used"],
+                ["Trim / package", l.trim],
+                ["Condition", l.condition === "new" ? "New" : `Used · ${l.grade}`],
                 [l.usageUnit === "hrs" ? "Hours" : "Kilometres", num(l.usage)],
                 ["Engine", m.engine],
                 ["Horsepower", m.hp ? `${m.hp} hp` : "—"],
                 ["Seats", m.seats ?? (m.category === "motorcycle" ? 2 : 1)],
                 ["Colour", l.color],
                 ["Title", l.titleStatus],
-                ["Owners", l.oneOwner ? "1 owner" : "2+ owners"],
+                ["Owners", l.owners === 0 ? "None (new)" : l.owners === 1 ? "1 owner" : `${l.owners} owners`],
+                ["Service records", l.condition === "new" ? "—" : { full: "Full history", partial: "Some records", none: "None provided" }[l.serviceRecords]],
+                ["VIN / serial", l.vin ? <span className="break-all font-mono text-xs">{l.vin}</span> : "Ask the dealer"],
                 ["Segment", m.segment],
               ].map(([k, v]) => (
                 <div key={k as string}>
@@ -78,7 +82,7 @@ export default async function ListingPage({ params }: Props) {
             </dl>
             {l.features.length > 0 && (
               <div className="mt-5">
-                <div className="text-sm font-semibold">Included extras</div>
+                <div className="text-sm font-semibold">Modifications &amp; extras</div>
                 <div className="mt-2 flex flex-wrap gap-1.5">{l.features.map((f) => <span key={f} className="chip">{f}</span>)}</div>
               </div>
             )}
@@ -86,14 +90,14 @@ export default async function ListingPage({ params }: Props) {
 
           <div className="card p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-bold">Known issues for the {m.make} {m.model}</h2>
+              <h2 className="text-lg font-bold">Buyer&apos;s checklist for the {m.make} {m.model}</h2>
               <div className="flex flex-wrap items-center gap-4">
                 <CompareToggle slug={m.slug} name={`${m.make} ${m.model}`} />
                 <Link href={compareHref([m.slug, ...rivals(m).map((r) => r.slug)])} className="text-sm font-semibold text-brand-400 hover:underline">Compare with rivals →</Link>
                 <Link href={`/research/${m.slug}#issues`} className="text-sm font-semibold text-brand-400 hover:underline">Full model report →</Link>
               </div>
             </div>
-            <p className="mt-1 text-sm text-zinc-500">What owners report most — ask the seller about these before you buy.</p>
+            <p className="mt-1 text-sm text-zinc-500">What to look at, or ask the dealer about. Receipts showing the work is done are a good sign.</p>
             <div className="mt-4 space-y-3">
               {issues.map((i) => <IssueCard key={i.id} issue={i} highlightYear={l.year} />)}
             </div>
@@ -103,7 +107,12 @@ export default async function ListingPage({ params }: Props) {
         {/* Sidebar */}
         <aside className="space-y-4 lg:sticky lg:top-20 lg:h-fit">
           <div className="card p-6">
-            <h1 className="text-xl font-extrabold leading-tight">{l.year} {m.make} {m.model}</h1>
+            {l.status !== "active" && (
+              <div className={`-mx-6 -mt-6 mb-4 px-6 py-2.5 text-sm font-bold ${l.status === "pending" ? "bg-amber-500/15 text-amber-300" : "bg-carbon-700 text-zinc-300"}`}>
+                {{ pending: "Sale pending: the dealer has a deposit on this one", sold: "Sold", expired: "This listing has expired" }[l.status]}
+              </div>
+            )}
+            <h1 className="text-xl font-extrabold leading-tight">{l.year} {m.make} {m.model} <span className="text-zinc-400">{l.trim}</span></h1>
             <p className="text-sm text-zinc-500">{l.city.name}, {l.city.province} · listed {l.daysOnMarket} days ago</p>
             <div className="mt-4 text-3xl font-extrabold">{cad(l.price)}</div>
             {l.priceDrop > 0 && <div className="text-sm font-semibold text-emerald-400">↓ Dropped {cad(l.priceDrop)}</div>}
@@ -118,12 +127,24 @@ export default async function ListingPage({ params }: Props) {
             </p>
             <div className="mt-4"><DealMeter price={l.price} market={l.marketValue} /></div>
             <div className="mt-5 grid gap-2">
-              <button className="btn-primary">Contact {l.sellerType === "dealer" ? "dealer" : "seller"}</button>
-              <button className="btn-ghost">Check availability</button>
+              {gone ? (
+                <a href={`/listings?model=${m.slug}`} className="btn-primary">See similar {m.model} listings</a>
+              ) : (
+                <>
+                  <button className="btn-primary">Contact dealer</button>
+                  <button className="btn-ghost">Check availability</button>
+                </>
+              )}
             </div>
+            <ul className="mt-4 flex flex-wrap gap-1.5">
+              <li className="chip">{l.priceType === "fixed" ? "No-haggle price" : "Price negotiable"}</li>
+              <li className={l.financing ? "chip border-emerald-500/30 text-emerald-300" : "chip"}>{l.financing ? "Financing available" : "No dealer financing"}</li>
+              <li className={l.delivery ? "chip border-emerald-500/30 text-emerald-300" : "chip"}>{l.delivery ? "Delivery available" : "Pickup only"}</li>
+            </ul>
             <div className="mt-4 border-t border-carbon-800 pt-4 text-sm">
               <div className="font-semibold">{l.seller}</div>
-              <div className="text-zinc-500">{l.sellerType === "dealer" ? "Dealer" : "Private party"} · {l.city.name}, {l.city.province}</div>
+              <div className="text-zinc-500">Dealer · {l.city.name}, {l.city.province} {l.postalCode}</div>
+              <div className="mt-1 text-xs text-zinc-600">Listed {shortDate(l.listedAt)} · updated {shortDate(l.updatedAt)}</div>
             </div>
           </div>
 
@@ -146,7 +167,7 @@ export default async function ListingPage({ params }: Props) {
               {tom.level === "fresh" && <>Just listed. Well-priced machines can sell quickly, so ask about availability soon.</>}
               {tom.level === "typical" && <>About normal. Similar {peerPlural} are usually listed around {tom.median} days.</>}
               {tom.level === "long" && (
-                <>Listed longer than <b className="text-amber-300">{tom.longerThanPct}%</b> of similar listings. The seller may be open to an offer below asking.</>
+                <>Listed longer than <b className="text-amber-300">{tom.longerThanPct}%</b> of similar listings. The dealer may be open to an offer below asking.</>
               )}
             </p>
             {l.history.length > 1 && (
@@ -167,7 +188,7 @@ export default async function ListingPage({ params }: Props) {
             )}
           </div>
 
-          <PaymentCalculator price={l.price} condition={l.condition} sellerType={l.sellerType} province={l.city.province} promo={promoRate} />
+          {!gone && <PaymentCalculator price={l.price} condition={l.condition} financing={l.financing} province={l.city.province} promo={promoRate} />}
 
           <Link
             href={`/value?model=${m.slug}&year=${l.year}&usage=${l.usage}`}

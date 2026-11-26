@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CATALOG, CATEGORIES, MAKES, getModel, type Category } from "@/data/catalog";
 import { promoTypeLabel } from "@/data/promos";
 import { getIssues, getPromos } from "@/lib/content";
-import { allListings, CITIES, DEAL_RATINGS, type Listing } from "@/lib/listings";
+import { liveListings, CITIES, DEAL_RATINGS, type Listing } from "@/lib/listings";
 import { scoreFor } from "@/lib/reviews";
 import { daysUntil, num, shortDate, cad } from "@/lib/format";
 
@@ -14,7 +14,7 @@ export const revalidate = 300;
 
 export default async function Home() {
   const [ISSUES, PROMOS] = await Promise.all([getIssues(), getPromos()]);
-  const listings = allListings();
+  const listings = liveListings();
   const cleanUsed = listings.filter((l) => l.condition === "used" && l.titleStatus === "Clean");
   const bySavingsPct = [...cleanUsed].sort((a, b) => b.savings / b.marketValue - a.savings / a.marketValue);
   const featured = bySavingsPct[0];
@@ -86,7 +86,7 @@ export default async function Home() {
           {[
             [num(listings.length), "Machines for sale"],
             [num(underMarket), "Priced under market"],
-            [num(ISSUES.length), "Known issues tracked"],
+            [num(ISSUES.length), "Checklist items"],
             [num(PROMOS.length), "Factory offers live"],
           ].map(([n, label], i) => (
             <div key={label} className={`py-7 ${i % 2 ? "pl-6" : ""} ${i > 0 ? "md:border-l md:border-carbon-800 md:pl-8" : ""} ${i === 2 ? "max-md:pl-0" : ""}`}>
@@ -130,18 +130,18 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Known issues ─────────────────────────────────── */}
+      {/* ── Buyer's checklist ────────────────────────────── */}
       <section className="mx-auto mt-20 max-w-7xl px-4">
         <div className="grid gap-10 rounded-sm border border-carbon-800 bg-carbon-900 p-6 md:p-10 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <div className="eyebrow text-brand-400">03 — Know before you buy</div>
-            <h2 className="display mt-4 text-5xl md:text-6xl">What breaks.<br />What it costs.</h2>
+            <div className="eyebrow text-brand-400">03 — Buyer&apos;s checklist</div>
+            <h2 className="display mt-4 text-5xl md:text-6xl">Check it.<br />Then buy it.</h2>
             <p className="mt-5 max-w-sm leading-relaxed text-zinc-400">
-              The problems owners keep posting about on Reddit and model forums, plus recalls and service bulletins.
-              Symptoms, the usual fix, and the bill.
+              What owners say to look at on every model, from Reddit and model forums, plus recalls and service bulletins.
+              What to look for, the usual fix, and the cost.
             </p>
             <Link href="/issues" className="mt-8 inline-block rounded-sm border border-carbon-600 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:border-white">
-              Search all {ISSUES.length} issues
+              Open the buyer&apos;s checklist
             </Link>
           </div>
           <ol className="divide-y divide-carbon-800 border-y border-carbon-800">
@@ -303,7 +303,7 @@ function DealCard({ l }: { l: Listing }) {
       <div className="mt-4 font-semibold leading-snug text-white group-hover:text-brand-400">
         {l.year} {l.model.make} {l.model.model}
       </div>
-      <div className="mt-1 text-xs text-zinc-500">{num(l.usage)} {l.usageUnit} · {l.sellerType === "dealer" ? "Dealer" : "Private"}</div>
+      <div className="mt-1 text-xs text-zinc-500">{num(l.usage)} {l.usageUnit} · {l.seller}</div>
       <div className="mt-auto pt-6">
         <div className="font-display text-3xl font-bold tabular-nums text-white">{cad(l.price)}</div>
         <div className="mt-1 text-xs text-zinc-500">

@@ -68,7 +68,7 @@ export default async function ModelPage({ params, searchParams }: Props) {
           <div className="mt-5 flex flex-wrap gap-2">
             <Link href={`/listings?model=${slug}`} className="btn-primary">See {market.count} for sale</Link>
             <Link href={compareHref([slug, ...rivals(m).map((r) => r.slug)])} className="btn-ghost">Compare with rivals</Link>
-            <a href="#issues" className="btn-ghost">Known issues ({issues.length})</a>
+            <a href="#issues" className="btn-ghost">Buyer&apos;s checklist ({issues.length})</a>
             <CompareToggle slug={slug} name={`${m.make} ${m.model}`} className="rounded-sm border border-carbon-600 px-4 py-2.5 uppercase tracking-wider" />
             <a href="#reviews" className="btn-ghost">Reviews</a>
           </div>
@@ -110,9 +110,9 @@ export default async function ModelPage({ params, searchParams }: Props) {
 
       {/* Issues */}
       <section id="issues" className="mt-10 scroll-mt-20">
-        <h2 className="font-display text-3xl font-bold uppercase italic tracking-tight text-white">Common problems owners report</h2>
+        <h2 className="font-display text-3xl font-bold uppercase italic tracking-tight text-white">Buyer&apos;s checklist</h2>
         <p className="mt-1 text-sm text-zinc-500">
-          Compiled from recurring discussions in rider communities and public recall notices. Always run the VIN through the manufacturer&apos;s recall lookup.
+          What to look at before you buy, compiled from rider communities and public recall notices. Always run the VIN through the manufacturer&apos;s recall lookup.
         </p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {issues.map((i) => <IssueCard key={i.id} issue={i} />)}

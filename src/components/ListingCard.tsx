@@ -13,7 +13,7 @@ export function ListingCard({ l, distance }: { l: Listing; distance?: number }) 
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
             <h3 className="font-bold leading-tight group-hover:text-brand-400">
-              {l.year} {l.model.make} {l.model.model}
+              {l.year} {l.model.make} {l.model.model} <span className="font-medium text-zinc-400">{l.trim}</span>
             </h3>
             <p className="text-sm text-zinc-500">
               {l.condition === "new" ? "New" : `${num(l.usage)} ${l.usageUnit}`} · {l.color} · {l.city.name}, {l.city.province}
@@ -36,12 +36,16 @@ export function ListingCard({ l, distance }: { l: Listing; distance?: number }) 
           </span>
         </div>
         <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-          {l.oneOwner && <span className="chip">1 owner</span>}
+          {l.status === "pending" && <span className="chip border-amber-500/40 bg-amber-500/10 text-amber-300">Sale pending</span>}
+          {l.owners === 1 && <span className="chip">1 owner</span>}
+          {l.condition === "used" && l.serviceRecords === "full" && <span className="chip">Service records</span>}
+          {l.financing && <span className="chip">Financing</span>}
+          {l.delivery && <span className="chip">Delivers</span>}
           {l.titleStatus === "Rebuilt" && <span className="chip border-red-500/30 bg-red-500/10 text-red-400">Rebuilt title</span>}
-          {l.features.slice(0, 3).map((f) => (
+          {l.features.slice(0, 2).map((f) => (
             <span key={f} className="chip">{f}</span>
           ))}
-          <span className="chip">{l.sellerType === "dealer" ? l.seller : "Private seller"}</span>
+          <span className="chip">{l.seller}</span>
           {l.daysOnMarket <= JUST_LISTED_DAYS ? (
             <span className="chip border-brand-500/40 bg-brand-500/10 text-brand-400">Just listed</span>
           ) : l.daysOnMarket >= STALE_DAYS ? (

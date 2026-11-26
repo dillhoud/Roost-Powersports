@@ -38,7 +38,9 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
     maxUsage: n("maxUsage"),
     near,
     radius: n("radius"),
-    seller: first(sp.seller),
+    financing: first(sp.financing) === "1",
+    delivery: first(sp.delivery) === "1",
+    records: first(sp.records) === "1",
     drop,
     maxDays: listed === "new" ? 7 : undefined,
     minDays: listed === "30" || listed === "60" ? Number(listed) : undefined,
@@ -68,7 +70,7 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
           </div>
           <div>
             <label className="label" htmlFor="q">Keyword</label>
-            <input id="q" name="q" defaultValue={first(sp.q)} placeholder="RZR, Grizzly, turbo…" className="field" />
+            <input id="q" name="q" defaultValue={first(sp.q)} placeholder="RZR, Grizzly, turbo, VIN…" className="field" />
           </div>
           <div>
             <span className="label">Type</span>
@@ -154,11 +156,13 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
             </div>
           </div>
           <div>
-            <span className="label">Seller</span>
-            <div className="grid grid-cols-3 gap-1.5">
-              <Radio name="seller" value="" label="Any" checked={!first(sp.seller)} />
-              <Radio name="seller" value="dealer" label="Dealer" checked={first(sp.seller) === "dealer"} />
-              <Radio name="seller" value="private" label="Private" checked={first(sp.seller) === "private"} />
+            <span className="label">Dealer offers</span>
+            <div className="space-y-1.5 text-sm">
+              {([["financing", "Financing available"], ["delivery", "Delivery available"], ["records", "Full service records"]] as const).map(([k, label]) => (
+                <label key={k} className="flex cursor-pointer items-center gap-2">
+                  <input type="checkbox" name={k} value="1" defaultChecked={first(sp[k]) === "1"} className="accent-brand-500" /> {label}
+                </label>
+              ))}
             </div>
           </div>
           <div>
