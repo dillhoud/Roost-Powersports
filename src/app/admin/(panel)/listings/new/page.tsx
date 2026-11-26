@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { snowmobileCatalog } from "@/lib/fitment/catalog";
 import { optionsFor } from "@/lib/fitment/engine";
 import { hasDb } from "@/lib/db";
+import { getLiveCatalog } from "@/lib/fitment/store";
 import { SnowmobileConfigurator } from "@/components/SnowmobileConfigurator";
 
 export const metadata = { title: "List a snowmobile" };
 
-export default function NewListing() {
+export default async function NewListing() {
+  const catalog = await getLiveCatalog();
   return (
     <div>
       <Link href="/admin/listings" className="text-sm text-zinc-500 hover:text-white">← Listings</Link>
@@ -17,7 +18,7 @@ export default function NewListing() {
       </p>
       {!hasDb && <p className="mt-4 rounded-sm border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">No database is connected, so you can try the form but it can&apos;t be saved.</p>}
       <div className="mt-6">
-        <SnowmobileConfigurator initial={optionsFor(snowmobileCatalog, {})} />
+        <SnowmobileConfigurator initial={optionsFor(catalog, {})} />
       </div>
     </div>
   );

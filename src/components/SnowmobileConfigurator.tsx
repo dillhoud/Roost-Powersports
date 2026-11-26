@@ -22,7 +22,11 @@ const VERIFICATION_LABEL = {
 
 type Answers = Record<string, string>;
 
-export function SnowmobileConfigurator({ initial }: { initial: OptionsResult }) {
+/**
+ * `catalog="draft"` reads choices from the catalog being edited; `preview` checks the
+ * configuration and shows how it would be saved, without creating a listing.
+ */
+export function SnowmobileConfigurator({ initial, catalog, preview }: { initial: OptionsResult; catalog?: "draft"; preview?: boolean }) {
   const [opts, setOpts] = useState(initial);
   const [sel, setSel] = useState<Selection>(initial.selection);
   // Everything the seller has answered, kept even when a later step is hidden, so going back doesn't lose work.
@@ -41,6 +45,7 @@ export function SnowmobileConfigurator({ initial }: { initial: OptionsResult }) 
     setLoading(true);
     const q = new URLSearchParams();
     for (const [k, v] of Object.entries(next)) if (v !== undefined && v !== "" && k !== "market") q.set(k, String(v));
+    if (catalog) q.set("catalog", catalog);
     try {
       const res = await fetch(`/api/snowmobiles/fitment/options?${q}`);
       const data: OptionsResult = await res.json();
@@ -106,6 +111,7 @@ export function SnowmobileConfigurator({ initial }: { initial: OptionsResult }) 
       className="grid gap-6 lg:grid-cols-[1fr_340px] lg:items-start"
     >
       <input type="hidden" name="config" value={config} />
+      {preview && <input type="hidden" name="preview" value={catalog ?? "live"} />}
       <div className="min-w-0 space-y-6">
         {state.errors.length > 0 && (
           <div id="form-errors" role="alert" className="rounded-sm border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-200">
@@ -228,8 +234,15 @@ export function SnowmobileConfigurator({ initial }: { initial: OptionsResult }) 
           </section>
         )}
 
+        {preview && showMods && (
+          <section className="card p-5">
+            <button disabled={submitting} className="btn-primary">{submitting ? "Checking…" : "Preview listing output"}</button>
+            {state.preview && <PreviewOutput result={state.preview} />}
+          </section>
+        )}
+
         {/* 4. Listing details */}
-        {showMods && (
+        {showMods && !preview && (
           <section className="card p-5">
             <h2 className="font-semibold text-white">4. Condition, history &amp; price</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -322,6 +335,30 @@ export function SnowmobileConfigurator({ initial }: { initial: OptionsResult }) 
         <div className="border-t border-carbon-800 pt-3 text-xs text-zinc-600">Catalog {opts.catalogVersion}</div>
       </aside>
     </form>
+  );
+}
+
+function PreviewOutput({ result }: { result: NonNullable<ListingFormState["preview"]> }) {
+  return (
+    <div className="mt-4 space-y-3 text-sm">
+      <div className="font-display text-xl font-bold uppercase italic text-white">{result.identity.title}</div>
+      <div className="text-zinc-400">{[result.identity.engine, result.identity.package].filter(Boolean).join(" · ")}</div>
+      <div>
+        Would be saved as: <b className={result.verification === "verified" ? "text-emerald-300" : "text-amber-300"}>{VERIFICATION_LABEL[result.verification]}</b>
+        {!result.ok && <span className="text-red-300"> (blocked: {result.errors.length} problem{result.errors.length > 1 ? "s" : ""})</span>}
+      </div>
+      <table className="w-full text-left">
+        <thead className="text-xs uppercase tracking-wider text-zinc-500"><tr><th className="py-1">Feature</th><th>Value</th><th>Origin</th><th>Status</th></tr></thead>
+        <tbody>
+          {result.equipment.map((e) => (
+            <tr key={e.feature} className="border-t border-carbon-800"><td className="py-1.5 text-zinc-400">{e.feature}</td><td>{e.value}</td><td>{ORIGIN_LABEL[e.origin]}</td><td className="text-zinc-500">{e.catalog_status}</td></tr>
+          ))}
+          {result.aftermarket.map((a) => (
+            <tr key={a.key} className="border-t border-carbon-800"><td className="py-1.5 text-zinc-400">{a.label}</td><td>{a.note ?? ""}</td><td>Aftermarket</td><td className="text-zinc-500">{a.catalog_status}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

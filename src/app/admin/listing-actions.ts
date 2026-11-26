@@ -3,11 +3,13 @@
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { hasDb, prisma } from "@/lib/db";
-import { snowmobileCatalog } from "@/lib/fitment/catalog";
-import { validateConfig, type ListingConfigInput, type ValidationError } from "@/lib/fitment/engine";
+import { validateConfig, type ListingConfigInput, type ValidationError, type ValidationResult } from "@/lib/fitment/engine";
+import { getDraft, getLiveCatalog } from "@/lib/fitment/store";
 
 export interface ListingFormState {
   errors: ValidationError[];
+  /** Set in preview mode: the checked configuration, not saved. */
+  preview?: ValidationResult;
 }
 
 const GRADES = ["New", "Excellent", "Very good", "Good", "Fair"];
@@ -18,7 +20,8 @@ const POSTAL = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z] ?\d[ABCEGHJ-NPRSTV-Z]\d$
 /** Re-checks the whole configuration against the catalog on the server. The form's filtering is a convenience, not the gate. */
 export async function createSnowmobileListing(_prev: ListingFormState, fd: FormData): Promise<ListingFormState> {
   await requireAdmin();
-  if (!hasDb) return { errors: [{ field: "form", message: "Connect a database first (see the admin overview)." }] };
+  const previewing = fd.get("preview") === "draft" || fd.get("preview") === "live";
+  if (!hasDb && !previewing) return { errors: [{ field: "form", message: "Connect a database first (see the admin overview)." }] };
 
   let config: ListingConfigInput;
   try {
@@ -26,12 +29,15 @@ export async function createSnowmobileListing(_prev: ListingFormState, fd: FormD
   } catch {
     return { errors: [{ field: "form", message: "The form data was incomplete. Reload the page and try again." }] };
   }
-  const result = validateConfig(snowmobileCatalog, {
+  const catalog = fd.get("preview") === "draft" ? (await getDraft())?.catalog : await getLiveCatalog();
+  if (!catalog) return { errors: [{ field: "form", message: "There's no draft catalog to preview." }] };
+  const result = validateConfig(catalog, {
     selection: config.selection ?? {},
     factory: config.factory ?? {},
     factoryAftermarket: config.factoryAftermarket ?? {},
     aftermarket: Array.isArray(config.aftermarket) ? config.aftermarket : [],
   });
+  if (previewing) return { errors: result.errors, preview: result };
   const errors = [...result.errors];
 
   const s = (k: string) => String(fd.get(k) ?? "").trim();

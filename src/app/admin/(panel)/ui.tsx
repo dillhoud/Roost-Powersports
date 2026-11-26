@@ -7,7 +7,7 @@ export function StatusPill({ live }: { live: boolean }) {
 }
 
 export function Flash({ sp }: { sp: Record<string, string | undefined> }) {
-  const msg = sp.saved ? "Saved — the public site is updated." : sp.deleted ? "Deleted." : sp.checked ? "Checked every offer page." : sp.added ? "Page added and checked. It will be checked again every morning." : sp.updated ? "Saved." : null;
+  const msg = sp.msg ? sp.msg : sp.saved ? "Saved — the public site is updated." : sp.deleted ? "Deleted." : sp.checked ? "Checked every offer page." : sp.added ? "Page added and checked. It will be checked again every morning." : sp.updated ? "Saved." : null;
   if (sp.error) return <p className="mt-4 rounded-sm border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{sp.error}</p>;
   if (!msg) return null;
   return <p className="mt-4 rounded-sm border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">{msg}</p>;
